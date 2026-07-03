@@ -10,7 +10,11 @@ let sources = [];
 
 async function init(inReq, _outResp) {
     const list = inReq.server.config?.pans?.list || [];
-    sources = list.length ? list : DEFAULT_PANS;
+    sources = list.length ? [...list] : [...DEFAULT_PANS];
+    const tg = inReq.server.config?.tgsou;
+    if (tg?.url) {
+        sources.push({ name: 'TG搜', address: tg.url });
+    }
     return {};
 }
 
@@ -18,7 +22,7 @@ async function searchPan(base, wd) {
     const url = base.replace(/\/$/, '');
     if (url.includes('252035') || url.includes('pansou')) {
         const res = await req.get(`${url}/api/search`, {
-            params: { kw: wd, cloud_types: 'quark,aliyun,uc,115', res: 'merge' },
+            params: { kw: wd, cloud_types: ['quark', 'aliyun', 'uc', '115'], res: 'merge' },
             timeout: 15000,
         });
         const merged = res.data?.data?.merged_by_type || {};

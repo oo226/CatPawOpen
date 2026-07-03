@@ -39,24 +39,33 @@ async function dir(inReq, _outResp) {
         };
     }
 
-    const { fid, parent } = parsePath(dirPath);
-    const items = await client.listDir(fid);
-    const list = [];
-    for (const item of items) {
-        const isDir = item.file === false || item.dir === true || item.file_type === 0;
-        const name = item.file_name || item.name || '';
-        const itemFid = item.fid || item.id || name;
-        if (!isDir && !isVideo(name)) continue;
-        list.push({
-            name: name.replaceAll('$', '_').replaceAll('#', '_'),
-            path: isDir ? `/q/${encodeURIComponent(itemFid)}/` : `/q/${encodeURIComponent(itemFid)}`,
-            thumb: isDir ? folderPic() : item.thumbnail || '',
-            type: isDir ? 0 : 10,
-            size: formatSize(item.size),
-            remark: '',
-        });
+    try {
+        const { fid, parent } = parsePath(dirPath);
+        const items = await client.listDir(fid);
+        const list = [];
+        for (const item of items) {
+            const isDir = item.file === false || item.dir === true || item.file_type === 0;
+            const name = item.file_name || item.name || '';
+            const itemFid = item.fid || item.id || name;
+            if (!isDir && !isVideo(name)) continue;
+            list.push({
+                name: name.replaceAll('$', '_').replaceAll('#', '_'),
+                path: isDir ? `/q/${encodeURIComponent(itemFid)}/` : `/q/${encodeURIComponent(itemFid)}`,
+                thumb: isDir ? folderPic() : item.thumbnail || '',
+                type: isDir ? 0 : 10,
+                size: formatSize(item.size),
+                remark: '',
+            });
+        }
+        return { parent, page: pg, pagecount: pg, list };
+    } catch (e) {
+        return {
+            parent: dirPath,
+            page: pg,
+            pagecount: pg,
+            list: [{ name: `夸克读取失败: ${e.message}`, path: '/', type: 0, thumb: folderPic() }],
+        };
     }
-    return { parent, page: pg, pagecount: pg, list };
 }
 
 async function file(inReq, _outResp) {

@@ -53,7 +53,12 @@ async function get_drives(name) {
 }
 
 async function init(inReq, _outResp) {
-    inReq.server.config.alist.forEach(
+    const items = [...(inReq.server.config.alist || [])];
+    const cfg = inReq.server.config;
+    if (cfg.muou?.url) items.push({ name: '🎬木偶', server: cfg.muou.url });
+    if (cfg.wogg?.url) items.push({ name: '🐶玩偶', server: cfg.wogg.url });
+    if (cfg.leijing?.url) items.push({ name: '⚡雷静', server: cfg.leijing.url });
+    items.forEach(
         (item) =>
             (__drives[item.name] = {
                 name: item.name,

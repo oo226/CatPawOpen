@@ -2,6 +2,7 @@ import { panRequest, folderPic, formatSize, isVideo } from '../../util/panHttp.j
 
 const API = 'https://openapi.alipan.com';
 let token = '';
+const ROOT = '/a/root/';
 
 async function init(inReq, _outResp) {
     token = inReq.server.config?.ali?.token || inReq.server.config?.ali?.token280 || '';
@@ -20,12 +21,9 @@ async function aliPost(path, data) {
 }
 
 function parsePath(path) {
-    const p = String(path || '').replace(/^\/+/, '');
-    if (!p) return { driveId: 'root', fileId: 'root', prefix: '/' };
-    const parts = p.split('/');
-    const fileId = parts.pop();
-    const driveId = parts.length ? parts[parts.length - 1] : 'root';
-    return { driveId, fileId, prefix: '/' + parts.join('/') + (parts.length ? '/' : '') };
+    const m = String(path || '').match(/^\/a\/([^/]+)\/?$/);
+    if (!m) return { fileId: 'root', parent: ROOT };
+    return { fileId: decodeURIComponent(m[1]), parent: `/a/${m[1]}/` };
 }
 
 async function dir(inReq, _outResp) {
@@ -47,47 +45,52 @@ async function dir(inReq, _outResp) {
             parent: '/',
             page: pg,
             pagecount: pg,
-            list: [{ name: '阿里云盘', path: '/root/', type: 0, thumb: folderPic() }],
+            list: [{ name: '阿里云盘', path: ROOT, type: 0, thumb: folderPic() }],
         };
     }
 
-    const { driveId, fileId } = parsePath(dirPath);
-    const json = await aliPost('/adrive/v1.0/openFile/list', {
-        drive_id: driveId === 'root' ? undefined : driveId,
-        parent_file_id: fileId,
-        limit: 200,
-        order_by: 'name',
-        order_direction: 'ASC',
-    });
-    const items = json?.items || [];
-    const parent = dirPath.endsWith('/') ? dirPath : dirPath + '/';
-    const list = [];
-    for (const item of items) {
-        const isDir = item.type === 'folder';
-        const name = item.name || '';
-        if (!isDir && !isVideo(name)) continue;
-        list.push({
-            name: name.replaceAll('$', '_').replaceAll('#', '_'),
-            path: parent + name + (isDir ? '/' : ''),
-            thumb: isDir ? folderPic() : item.thumbnail || '',
-            type: isDir ? 0 : 10,
-            size: formatSize(item.size),
-            remark: '',
+    try {
+        const { fileId, parent } = parsePath(dirPath);
+        const json = await aliPost('/adrive/v1.0/openFile/list', {
+            parent_file_id: fileId,
+            limit: 200,
+            order_by: 'name',
+            order_direction: 'ASC',
         });
+        const items = json?.items || [];
+        const list = [];
+        for (const item of items) {
+            const isDir = item.type === 'folder';
+            const name = item.name || '';
+            const id = item.file_id || name;
+            if (!isDir && !isVideo(name)) continue;
+            list.push({
+                name: name.replaceAll('$', '_').replaceAll('#', '_'),
+                path: isDir ? `/a/${encodeURIComponent(id)}/` : `/a/${encodeURIComponent(id)}`,
+                thumb: isDir ? folderPic() : item.thumbnail || '',
+                type: isDir ? 0 : 10,
+                size: formatSize(item.size),
+                remark: '',
+            });
+        }
+        return { parent, page: pg, pagecount: pg, list };
+    } catch (e) {
+        return {
+            parent: dirPath,
+            page: pg,
+            pagecount: pg,
+            list: [{ name: `阿里读取失败: ${e.message}`, path: '/', type: 0, thumb: folderPic() }],
+        };
     }
-    return { parent, page: pg, pagecount: pg, list };
 }
 
 async function file(inReq, _outResp) {
-    const filePath = inReq.body.path;
-    const { driveId, fileId, prefix } = parsePath(filePath);
-    const name = filePath.slice(prefix.length).replace(/\/$/, '');
+    const { fileId } = parsePath(inReq.body.path);
     const json = await aliPost('/adrive/v1.0/openFile/getDownloadUrl', {
-        drive_id: driveId === 'root' ? undefined : driveId,
         file_id: fileId,
     });
     return {
-        name,
+        name: fileId,
         url: json?.url || '',
         size: '',
         remark: '',
