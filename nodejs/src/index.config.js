@@ -1,7 +1,11 @@
+import { getIPAddress } from './util/network.js';
+
+const builtinDanmuAddress = `http://${getIPAddress()}:9321`;
+
 export default {
     ali: {
         token: '',
-        token280: 'token280',
+        prefix: '阿里',
     },
     quark: {
         cookie: '',
@@ -14,10 +18,13 @@ export default {
     y115: {
         cookie: '',
     },
+    baidu: {
+        cookie: '',
+    },
     muou: {
         url: '',
     },
-    wogg: {
+    wanou: {
         url: '',
     },
     leijing: {
@@ -25,38 +32,34 @@ export default {
     },
     tgsou: {
         tgPic: false,
-        count: 0,
+        count: '',
         url: '',
         channelUsername: '',
     },
+    pansou: {
+        url: '',
+        channels: '',
+        plugins: '',
+        cloudTypes: '',
+    },
     tgchannel: {},
+    tgfilebot: {
+        url: 'http://127.0.0.1:8080',
+        password: '',
+    },
     sites: {
         list: [],
     },
     pans: {
-        list: [
-            { name: 'PanSou', address: 'https://so.252035.xyz' },
-        ],
+        list: [],
     },
     danmu: {
-        urls: [
-            { address: 'https://logo.saodu.work:8888/87654321', name: '默认1' },
-            { address: 'https://fjj0417.dpdns.org/87654321', name: '默认2' },
-            { address: 'http://127.0.0.1:9321/87654321', name: '默认3' },
-            { address: 'http://47.107.188.112:6008/87654321', name: '默认4' },
-            { address: 'http://ecs.dysobo.cn:9321/87654321', name: '默认5' },
-            { address: 'https://dm.626258.xyz/87654321', name: '默认6' },
-        ],
+        urls: [{ address: builtinDanmuAddress, name: '内置弹幕', builtin: true }],
         autoPush: true,
+        debug: false,
     },
     t4: {
-        list: [
-            { name: '📡IPTV直播(本地)', address: 'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/itv.m3u' },
-            { name: '⚡永乐影视', address: 'https://ylsp.jsnzkpg.ccwu.cc' },
-            { name: '🗡️荐片影视', address: 'https://jp.jsnzkpg.ccwu.cc' },
-            { name: '🎞️爬虫影视', address: 'https://dy.7772888.xyz/api.php/tvbox' },
-            { name: '🇨🇳央视影视', address: 'https://catbox.n13.club/18/央视影视.php' },
-        ],
+        list: [],
     },
     cms: {
         list: [
@@ -69,33 +72,36 @@ export default {
             { name: '🏙️魔都资源', address: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
             { name: '🌊天涯资源', address: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
             { name: '☁️百度云资源', address: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
-            { name: '😁如意采集', address: 'https://cj.rycjapi.com/api.php/provide/vod' },
-            { name: '🪐iQiYi采集', address: 'https://iqiyizyapi.com/api.php/provide/vod' },
         ],
     },
-    ffm3u8: {
-        url: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8',
-        categories: [
-            '国产剧', '香港剧', '韩国剧', '欧美剧', '台湾剧', '日本剧', '海外剧', '泰国剧', '短剧',
-            '动作片', '喜剧片', '爱情片', '科幻片', '恐怖片', '剧情片', '战争片', '动漫片',
-            '大陆综艺', '港台综艺', '日韩综艺', '欧美综艺', '国产动漫', '日韩动漫', '欧美动漫', '港台动漫', '海外动漫', '记录片',
-        ],
+    customSpiders: {
+        enabled: true,
+        dir: '',
+        urls: [],
+        strict: false,
+        allowOverride: false,
+        cacheTtlMs: 5000,
+        factoryTimeoutMs: 10000,
+        urlTimeoutMs: 10000,
     },
-    lzi: { url: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
-    okzy: { url: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
-    hongniu: { url: 'https://www.hongniuzy2.com/api.php/provide/vod/at/json' },
-    sdzy: { url: 'https://sdzyapi.com/api.php/provide/vod/at/json' },
-    suoni: { url: 'https://suoniapi.com/api.php/provide/vod/at/json' },
-    mody: { url: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
-    tianya: { url: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
-    bdzy: { url: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
-    live: {
+    live2vod: {
         sources: [
-            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/itv.m3u',
-            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/index.m3u',
-            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u',
-            'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u',
+            { name: 'IPTV', url: 'https://ipv.qq1000.site/IPTV.txt', img: '' },
+            {
+                name: '范明明',
+                url: 'https://cdn.jsdelivr.net/gh/fanmingming/live@refs/heads/main/tv/m3u/ipv6.m3u',
+                img: '',
+            },
+            { name: '电视', url: 'https://tv.iill.top/m3u/Gather', img: '' },
+            { name: '网络', url: 'https://m.iill.top/Live.m3u', img: '' },
+            { name: '体育', url: 'https://tv.iill.top/m3u/Sport', img: '' },
+            { name: '哔哩', url: 'https://sub.ottiptv.cc/bililive.m3u', img: '' },
+            { name: '虎牙', url: 'https://sub.ottiptv.cc/huyayqk.m3u', img: '' },
+            { name: '斗鱼', url: 'https://sub.ottiptv.cc/douyuyqk.m3u', img: '' },
+            { name: 'YY', url: 'https://sub.ottiptv.cc/yylunbo.m3u', img: '' },
         ],
+        showMode: 'groups',
+        def_pic: 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/hipy-server/master/app/static/img/lives.jpg',
     },
     alist: [
         { name: '🐉神族九帝', server: 'https://alist.shenzjd.com' },

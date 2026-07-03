@@ -6,9 +6,10 @@
     "scripts": {
         "dev": "cross-env DEV_HTTP_PORT=3006 nodemon --config nodemon.json src/dev.js",
         "start": "cross-env DEV_HTTP_PORT=3006 node src/dev.js",
-        "_build": "rimraf dist && node esbuild.js && node esbuild-config.js",
+        "_build": "rimraf dist && node esbuild-config.js && node scripts/fetch-runtime.mjs",
         "build": "cross-env NODE_ENV=production npm run _build",
         "build:dbg": "cross-env NODE_ENV=development npm run _build",
+        "build:local": "rimraf dist && node esbuild.js && node esbuild-config.js",
         "build:config": "cross-env NODE_ENV=production node esbuild-config.js",
         "build:rollup(obsolete)": "rimraf dist && cross-env NODE_ENV=production node rollup.js && cross-env NODE_ENV=production node rollup-config.js",
         "build:rollup:config(obsolete)": "cross-env NODE_ENV=production node rollup-config.js"

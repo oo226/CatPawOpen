@@ -1,30 +1,3 @@
 {
-    "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5",
-    "sites": [
-        { "key": "nodejs_ffm3u8", "name": "非凡采集", "type": 3, "api": "csp_ffm3u8", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_lzi", "name": "量子资源", "type": 3, "api": "csp_lzi", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_okzy", "name": "OK资源", "type": 3, "api": "csp_okzy", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_hongniu", "name": "红牛资源", "type": 3, "api": "csp_hongniu", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_sdzy", "name": "闪电资源", "type": 3, "api": "csp_sdzy", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_suoni", "name": "索尼资源", "type": 3, "api": "csp_suoni", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_mody", "name": "魔都资源", "type": 3, "api": "csp_mody", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_tianya", "name": "天涯资源", "type": 3, "api": "csp_tianya", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_bdzy", "name": "百度云资源", "type": 3, "api": "csp_bdzy", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_cms", "name": "采集站", "type": 3, "api": "csp_cms", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_t4", "name": "站源", "type": 3, "api": "csp_t4", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_xgcartoon", "name": "西瓜卡通", "type": 3, "api": "csp_xgcartoon", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_douban", "name": "豆瓣榜单", "type": 3, "api": "csp_douban", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_live", "name": "IPTV直播", "type": 3, "api": "csp_live", "searchable": 1, "quickSearch": 1 },
-        { "key": "nodejs_push", "name": "推送", "type": 4, "api": "csp_push", "searchable": 0 },
-        { "key": "nodejs_alist", "name": "Alist", "type": 40, "api": "csp_alist", "searchable": 0 },
-        { "key": "nodejs_quark", "name": "夸克网盘", "type": 40, "api": "csp_quark", "searchable": 0 },
-        { "key": "nodejs_ali", "name": "阿里云盘", "type": 40, "api": "csp_ali", "searchable": 0 },
-        { "key": "nodejs_uc", "name": "UC网盘", "type": 40, "api": "csp_uc", "searchable": 0 },
-        { "key": "nodejs_y115", "name": "115网盘", "type": 40, "api": "csp_y115", "searchable": 0 },
-        { "key": "nodejs_pans", "name": "搜盘", "type": 40, "api": "csp_pans", "searchable": 1, "quickSearch": 1 }
-    ],
-    "parses": [],
-    "flags": [],
-    "ijk": [],
-    "ads": []
+    "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
 }
