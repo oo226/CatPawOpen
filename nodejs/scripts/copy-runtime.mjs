@@ -7,26 +7,66 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const vendorJs = path.join(root, 'vendor/douer/index.js');
 const vendorMd5 = path.join(root, 'vendor/douer/index.js.md5');
+const hubCjs = path.join(root, 'dist/cmshub.cjs');
 const distDir = path.join(root, 'dist');
 const distJs = path.join(distDir, 'index.js');
 const distMd5 = path.join(distDir, 'index.js.md5');
+
+const CMS_FOREACH = '(await Hce(t)).forEach(o=>{r.push(Vce(o.name,o.address))});';
+const CMS_FOREACH_PATCH =
+    'Array.isArray(t.config?.cms?.hub)&&t.config.cms.hub.length>0?r.push(__catpawCmshub):(await Hce(t)).forEach(o=>{r.push(Vce(o.name,o.address))});';
+
+const HCE_FALLBACK = 'return Fce(r.length>0?r:FIr)';
+const HCE_FALLBACK_PATCH =
+    'if(r.length>0)return Fce(r);let h=Array.isArray(t.config.cms?.hub)?t.config.cms.hub:[];return Fce(h.length>0?[]:FIr)';
+
+const SERVER_ANCHOR = 'var H0t=Object.create';
 
 if (!fs.existsSync(vendorJs)) {
     console.error('Missing vendor/douer/index.js — run: npm run vendor:refresh');
     process.exit(1);
 }
+if (!fs.existsSync(hubCjs)) {
+    console.error('Missing dist/cmshub.cjs — run: node esbuild-cmshub.js');
+    process.exit(1);
+}
 
-fs.mkdirSync(distDir, { recursive: true });
-const buf = fs.readFileSync(vendorJs);
-fs.writeFileSync(distJs, buf);
-
-const md5 = createHash('md5').update(buf).digest('hex');
 const pinned = fs.existsSync(vendorMd5) ? fs.readFileSync(vendorMd5, 'utf8').trim() : '';
-if (pinned && pinned !== md5) {
-    console.error(`vendor md5 mismatch: file=${md5} pinned=${pinned}`);
+const vendorBuf = fs.readFileSync(vendorJs);
+const vendorHash = createHash('md5').update(vendorBuf).digest('hex');
+if (pinned && pinned !== vendorHash) {
+    console.error(`vendor md5 mismatch: file=${vendorHash} pinned=${pinned}`);
     console.error('Run: npm run vendor:refresh');
     process.exit(1);
 }
+
+let runtime = fs.readFileSync(vendorJs, 'utf8');
+const hubBody = fs.readFileSync(hubCjs, 'utf8').replace(/\s+/g, ' ').trim();
+const hubCode = `(function(){var module={exports:{}};var exports=module.exports;${hubBody}return module.exports.default||module.exports;})()`;
+
+if (!runtime.includes(CMS_FOREACH)) {
+    console.error('vendor patch failed: CMS foreach anchor not found');
+    process.exit(1);
+}
+if (!runtime.includes(HCE_FALLBACK)) {
+    console.error('vendor patch failed: Hce fallback anchor not found');
+    process.exit(1);
+}
+if (!runtime.includes(SERVER_ANCHOR)) {
+    console.error('vendor patch failed: server bundle anchor not found');
+    process.exit(1);
+}
+
+runtime = runtime.replace(SERVER_ANCHOR, `var __catpawCmshub=${hubCode};${SERVER_ANCHOR}`);
+runtime = runtime.replace(CMS_FOREACH, CMS_FOREACH_PATCH);
+runtime = runtime.replace(HCE_FALLBACK, HCE_FALLBACK_PATCH);
+
+fs.mkdirSync(distDir, { recursive: true });
+fs.writeFileSync(distJs, runtime);
+
+const md5 = createHash('md5').update(runtime).digest('hex');
 fs.writeFileSync(distMd5, md5);
 
-console.log(`runtime copied from vendor/douer/index.js (${(buf.length / 1024 / 1024).toFixed(2)} MB, md5=${md5})`);
+console.log(
+    `runtime patched: vendor douer + cmshub inject (${(runtime.length / 1024 / 1024).toFixed(2)} MB, md5=${md5})`
+);

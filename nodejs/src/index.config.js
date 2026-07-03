@@ -2,7 +2,8 @@ import { getIPAddress } from './util/network.js';
 
 const builtinDanmuAddress = `http://${getIPAddress()}:9321`;
 
-// 采集源数据放 cms.hub，cms.list 必须留空（否则 douer 会为每条展开一个「采」菜单项）
+// 采集源在 cms.hub；cms.list 留空避免 douer 为每条展开菜单项。
+// cmshub 在构建时注入 vendor/index.js，不依赖 customSpiders 远程加载。
 const cmsSources = [
     { name: '非凡资源', address: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8' },
     { name: '量子资源', address: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
@@ -79,12 +80,9 @@ export default {
         hub: cmsSources,
     },
     customSpiders: {
-        enabled: true,
+        enabled: false,
         dir: '',
-        urls: [
-            'https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/cmshub.js',
-            'https://ghfast.top/https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/cmshub.js',
-        ],
+        urls: [],
         strict: false,
         allowOverride: false,
         cacheTtlMs: 5000,
