@@ -1,5 +1,5 @@
 {
-    "spider": "github://你的用户名/CatPawOpen@dist/nodejs/dist/index.config.js.md5",
+    "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5",
     "sites": [
         {
             "key": "nodejs_myvideo",
