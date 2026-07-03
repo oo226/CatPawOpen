@@ -7,18 +7,14 @@ import y115 from './spider/pan/y115.js';
 import pans from './spider/pan/pans.js';
 import _13bqg from './spider/book/13bqg.js';
 import copymanga from './spider/book/copymanga.js';
-import ffm3u8 from './spider/video/ffm3u8.js';
-import cmsources from './spider/video/cmsources.js';
-import cmslist from './spider/video/cmslist.js';
+import cmshub from './spider/video/cmshub.js';
 import t4 from './spider/video/t4.js';
 import xgcartoon from './spider/video/xgcartoon.js';
 import douban from './spider/video/douban.js';
 import live from './spider/video/live.js';
 
 const spiders = [
-    ffm3u8,
-    ...cmsources,
-    cmslist,
+    cmshub,
     t4,
     xgcartoon,
     douban,

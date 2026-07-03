@@ -1,6 +1,19 @@
 import { getIPAddress } from './util/network.js';
+import { buildDisabledCmsSites } from './util/cmsHubUtil.js';
 
 const builtinDanmuAddress = `http://${getIPAddress()}:9321`;
+
+const cmsSources = [
+    { name: '非凡资源', address: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8' },
+    { name: '量子资源', address: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
+    { name: 'OK资源', address: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
+    { name: '红牛资源', address: 'https://www.hongniuzy2.com/api.php/provide/vod/at/json' },
+    { name: '闪电资源', address: 'https://sdzyapi.com/api.php/provide/vod/at/json' },
+    { name: '索尼资源', address: 'https://suoniapi.com/api.php/provide/vod/at/json' },
+    { name: '魔都资源', address: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
+    { name: '天涯资源', address: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
+    { name: '百度云资源', address: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
+];
 
 export default {
     ali: {
@@ -48,7 +61,8 @@ export default {
         password: '',
     },
     sites: {
-        list: [],
+        // 隐藏 douer 按 cms.list 自动展开的子源，只保留「采」采集聚合入口
+        list: buildDisabledCmsSites(cmsSources),
     },
     pans: {
         list: [],
@@ -62,22 +76,12 @@ export default {
         list: [],
     },
     cms: {
-        list: [
-            { name: '🎬非凡采集', address: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8' },
-            { name: '⚛️量子资源', address: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
-            { name: '👌OK资源', address: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
-            { name: '🐂红牛资源', address: 'https://www.hongniuzy2.com/api.php/provide/vod/at/json' },
-            { name: '⚡闪电资源', address: 'https://sdzyapi.com/api.php/provide/vod/at/json' },
-            { name: '🎧索尼资源', address: 'https://suoniapi.com/api.php/provide/vod/at/json' },
-            { name: '🏙️魔都资源', address: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
-            { name: '🌊天涯资源', address: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
-            { name: '☁️百度云资源', address: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
-        ],
+        list: cmsSources,
     },
     customSpiders: {
         enabled: true,
         dir: '',
-        urls: [],
+        urls: ['github://oo226/CatPawOpen@dist/nodejs/dist/cmshub.js.md5'],
         strict: false,
         allowOverride: false,
         cacheTtlMs: 5000,
