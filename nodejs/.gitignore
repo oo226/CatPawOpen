@@ -2,3 +2,4 @@ dist
 generated
 node_modules
 db.json
+nodejs/default.db.json

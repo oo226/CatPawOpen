@@ -56,7 +56,7 @@ cd nodejs && npm install && npm start
 
 非凡、量子、OK、红牛、闪电、索尼、魔都、天涯、百度云等 MacCMS 采集在 `index.config.js` 的 `cms.list` 中。
 
-菜单只显示一个 **「采」采集** 入口：`cms.hub` 预置采集地址，构建时把 `cmshub` 注入 `index.js`（不依赖外网 customSpiders，也不会回退到默认电影天堂）。
+菜单只显示一个 **「采」采集** 入口：采集地址写在 `cms.list`（与 lmentor 相同），构建时把 `cmshub` 注入 `index.js` 聚合多源，且不再回退默认电影天堂。
 
 ## 开发新爬虫
 

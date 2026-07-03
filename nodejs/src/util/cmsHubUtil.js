@@ -13,10 +13,25 @@ export function stripCmsPrefix(name = '') {
 
 export function getCmsSources(config = {}) {
     const cms = config?.cms || {};
-    const hub = cms.hub ?? cms.sources;
-    if (Array.isArray(hub) && hub.length > 0) return hub;
     const list = cms.list;
-    return Array.isArray(list) ? list : [];
+    if (Array.isArray(list) && list.length > 0) return list;
+    const hub = cms.hub ?? cms.sources;
+    return Array.isArray(hub) ? hub : [];
+}
+
+/** 与 lmentor Ybe / douer Hce 一致：db /cms/list 优先于 config.cms.list */
+export async function resolveCmsSources(server) {
+    const config = server?.config || {};
+    try {
+        const dbCms = await server?.db?.getObjectDefault?.('/cms', {});
+        if (dbCms && Object.prototype.hasOwnProperty.call(dbCms, 'list')) {
+            const dbList = getCmsSources({ cms: { list: dbCms.list } });
+            if (dbList.length > 0) return dbList;
+        }
+    } catch {
+        // ignore
+    }
+    return getCmsSources(config);
 }
 
 export function encodeVodRef(address, vodId) {

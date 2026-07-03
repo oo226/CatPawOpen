@@ -4,7 +4,7 @@ import {
     cmsDisplayName,
     decodeVodRef,
     encodeVodRef,
-    getCmsSources,
+    resolveCmsSources,
     stripCmsPrefix,
 } from '../../util/cmsHubUtil.js';
 
@@ -47,7 +47,7 @@ async function init(_inReq, _outResp) {
 }
 
 async function home(inReq, _outResp) {
-    const sources = getCmsSources(inReq.server.config);
+    const sources = await resolveCmsSources(inReq.server);
     return {
         class: sources.map((item, index) => ({
             type_id: sourceId(item.address, index),
@@ -57,7 +57,7 @@ async function home(inReq, _outResp) {
 }
 
 async function category(inReq, _outResp) {
-    const sources = getCmsSources(inReq.server.config);
+    const sources = await resolveCmsSources(inReq.server);
     const rawId = String(inReq.body.id || '');
     let page = Number(inReq.body.page) || 1;
     if (page <= 0) page = 1;
@@ -130,7 +130,7 @@ async function search(inReq, _outResp) {
     let page = Number(inReq.body.page) || 1;
     if (page <= 0) page = 1;
 
-    const sources = getCmsSources(inReq.server.config);
+    const sources = await resolveCmsSources(inReq.server);
     if (!wd) {
         return {
             class: sources.map((item, index) => ({

@@ -22,7 +22,7 @@ const config = {
     pans: { list: [] },
     danmu: { urls: [], autoPush: true, debug: false },
     t4: { list: [] },
-    cms: { list: [], hub: cmsSources },
+    cms: { list: cmsSources },
     customSpiders: { enabled: false, dir: '', urls: [] },
     color: [],
     live2vod: { sources: [], showMode: 'groups', def_pic: '' },

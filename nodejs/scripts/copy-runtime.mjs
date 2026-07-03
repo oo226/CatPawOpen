@@ -13,12 +13,10 @@ const distJs = path.join(distDir, 'index.js');
 const distMd5 = path.join(distDir, 'index.js.md5');
 
 const CMS_FOREACH = '(await Hce(t)).forEach(o=>{r.push(Vce(o.name,o.address))});';
-const CMS_FOREACH_PATCH =
-    'Array.isArray(t.config?.cms?.hub)&&t.config.cms.hub.length>0?r.push(__catpawCmshub):(await Hce(t)).forEach(o=>{r.push(Vce(o.name,o.address))});';
+const CMS_FOREACH_PATCH = '(await Hce(t)).length>0&&r.push(__catpawCmshub);';
 
 const HCE_FALLBACK = 'return Fce(r.length>0?r:FIr)';
-const HCE_FALLBACK_PATCH =
-    'if(r.length>0)return Fce(r);let h=Array.isArray(t.config.cms?.hub)?t.config.cms.hub:[];return Fce(h.length>0?[]:FIr)';
+const HCE_FALLBACK_PATCH = 'return Fce(r)';
 
 const SERVER_ANCHOR = 'var H0t=Object.create';
 
