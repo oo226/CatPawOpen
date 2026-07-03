@@ -1,7 +1,85 @@
 export default {
+    ali: {
+        token: '',
+        token280: 'token280',
+    },
+    quark: {
+        cookie: '',
+    },
+    uc: {
+        cookie: 'cookie',
+        token: 'token',
+        ut: 'ut',
+    },
+    y115: {
+        cookie: '',
+    },
+    muou: {
+        url: '',
+    },
+    wogg: {
+        url: '',
+    },
+    leijing: {
+        url: '',
+    },
+    tgsou: {
+        tgPic: false,
+        count: 0,
+        url: '',
+        channelUsername: '',
+    },
+    tgchannel: {},
+    sites: {
+        list: [],
+    },
+    pans: {
+        list: [
+            { name: 'PanSou', address: 'https://so.252035.xyz' },
+        ],
+    },
+    danmu: {
+        urls: [
+            { address: 'https://logo.saodu.work:8888/87654321', name: '默认1' },
+            { address: 'https://fjj0417.dpdns.org/87654321', name: '默认2' },
+            { address: 'http://127.0.0.1:9321/87654321', name: '默认3' },
+            { address: 'http://47.107.188.112:6008/87654321', name: '默认4' },
+            { address: 'http://ecs.dysobo.cn:9321/87654321', name: '默认5' },
+            { address: 'https://dm.626258.xyz/87654321', name: '默认6' },
+        ],
+        autoPush: true,
+    },
+    t4: {
+        list: [
+            { name: '📡IPTV直播(本地)', address: 'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/itv.m3u' },
+            { name: '⚡永乐影视', address: 'https://ylsp.jsnzkpg.ccwu.cc' },
+            { name: '🗡️荐片影视', address: 'https://jp.jsnzkpg.ccwu.cc' },
+            { name: '🎞️爬虫影视', address: 'https://dy.7772888.xyz/api.php/tvbox' },
+            { name: '🇨🇳央视影视', address: 'https://catbox.n13.club/18/央视影视.php' },
+        ],
+    },
+    cms: {
+        list: [
+            { name: '🎬非凡采集', address: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8' },
+            { name: '⚛️量子资源', address: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
+            { name: '👌OK资源', address: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
+            { name: '🐂红牛资源', address: 'https://www.hongniuzy2.com/api.php/provide/vod/at/json' },
+            { name: '⚡闪电资源', address: 'https://sdzyapi.com/api.php/provide/vod/at/json' },
+            { name: '🎧索尼资源', address: 'https://suoniapi.com/api.php/provide/vod/at/json' },
+            { name: '🏙️魔都资源', address: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
+            { name: '🌊天涯资源', address: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
+            { name: '☁️百度云资源', address: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
+            { name: '😁如意采集', address: 'https://cj.rycjapi.com/api.php/provide/vod' },
+            { name: '🪐iQiYi采集', address: 'https://iqiyizyapi.com/api.php/provide/vod' },
+        ],
+    },
     ffm3u8: {
         url: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8',
-        categories: ['国产剧', '香港剧', '韩国剧', '欧美剧', '台湾剧', '日本剧', '海外剧', '泰国剧', '短剧', '动作片', '喜剧片', '爱情片', '科幻片', '恐怖片', '剧情片', '战争片', '动漫片', '大陆综艺', '港台综艺', '日韩综艺', '欧美综艺', '国产动漫', '日韩动漫', '欧美动漫', '港台动漫', '海外动漫', '记录片'],
+        categories: [
+            '国产剧', '香港剧', '韩国剧', '欧美剧', '台湾剧', '日本剧', '海外剧', '泰国剧', '短剧',
+            '动作片', '喜剧片', '爱情片', '科幻片', '恐怖片', '剧情片', '战争片', '动漫片',
+            '大陆综艺', '港台综艺', '日韩综艺', '欧美综艺', '国产动漫', '日韩动漫', '欧美动漫', '港台动漫', '海外动漫', '记录片',
+        ],
     },
     lzi: { url: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
     okzy: { url: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
@@ -20,14 +98,8 @@ export default {
         ],
     },
     alist: [
-        {
-            name: '🐉神族九帝',
-            server: 'https://alist.shenzjd.com',
-        },
-        {
-            name: '💢repl',
-            server: 'https://ali.liucn.repl.co',
-        },
+        { name: '🐉神族九帝', server: 'https://alist.shenzjd.com' },
+        { name: '💢repl', server: 'https://ali.liucn.repl.co' },
     ],
     color: [
         {

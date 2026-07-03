@@ -1,14 +1,38 @@
 import push from './spider/video/push.js';
 import alist from './spider/pan/alist.js';
+import quark from './spider/pan/quark.js';
+import ali from './spider/pan/ali.js';
+import uc from './spider/pan/uc.js';
+import y115 from './spider/pan/y115.js';
+import pans from './spider/pan/pans.js';
 import _13bqg from './spider/book/13bqg.js';
 import copymanga from './spider/book/copymanga.js';
 import ffm3u8 from './spider/video/ffm3u8.js';
 import cmsources from './spider/video/cmsources.js';
+import cmslist from './spider/video/cmslist.js';
+import t4 from './spider/video/t4.js';
 import xgcartoon from './spider/video/xgcartoon.js';
 import douban from './spider/video/douban.js';
 import live from './spider/video/live.js';
 
-const spiders = [ffm3u8, ...cmsources, xgcartoon, douban, live, push, alist, _13bqg, copymanga];
+const spiders = [
+    ffm3u8,
+    ...cmsources,
+    cmslist,
+    t4,
+    xgcartoon,
+    douban,
+    live,
+    push,
+    alist,
+    quark,
+    ali,
+    uc,
+    y115,
+    pans,
+    _13bqg,
+    copymanga,
+];
 const spiderPrefix = '/spider'; // API 路由前缀
 
 /**
