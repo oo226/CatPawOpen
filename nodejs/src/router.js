@@ -5,8 +5,10 @@ import copymanga from './spider/book/copymanga.js';
 import ffm3u8 from './spider/video/ffm3u8.js';
 import cmsources from './spider/video/cmsources.js';
 import xgcartoon from './spider/video/xgcartoon.js';
+import douban from './spider/video/douban.js';
+import live from './spider/video/live.js';
 
-const spiders = [ffm3u8, ...cmsources, xgcartoon, push, alist, _13bqg, copymanga];
+const spiders = [ffm3u8, ...cmsources, xgcartoon, douban, live, push, alist, _13bqg, copymanga];
 const spiderPrefix = '/spider'; // API 路由前缀
 
 /**

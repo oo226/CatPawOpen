@@ -11,6 +11,14 @@ export default {
     mody: { url: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
     tianya: { url: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
     bdzy: { url: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
+    live: {
+        sources: [
+            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/itv.m3u',
+            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/index.m3u',
+            'https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u',
+            'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u',
+        ],
+    },
     alist: [
         {
             name: '🐉神族九帝',
