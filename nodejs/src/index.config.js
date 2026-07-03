@@ -1,17 +1,16 @@
 export default {
-    kunyu77: {
-        testcfg: {
-            bbbb: 'aaaaa',
-        },
-    },
     ffm3u8: {
         url: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8',
         categories: ['国产剧', '香港剧', '韩国剧', '欧美剧', '台湾剧', '日本剧', '海外剧', '泰国剧', '短剧', '动作片', '喜剧片', '爱情片', '科幻片', '恐怖片', '剧情片', '战争片', '动漫片', '大陆综艺', '港台综艺', '日韩综艺', '欧美综艺', '国产动漫', '日韩动漫', '欧美动漫', '港台动漫', '海外动漫', '记录片'],
     },
-    myvideo: {
-        // 使用 ffm3u8 线路，播放地址为直接可播的 .m3u8 链接
-        url: 'https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8',
-    },
+    lzi: { url: 'https://cj.lziapi.com/api.php/provide/vod/at/json' },
+    okzy: { url: 'https://api.okzyw.net/api.php/provide/vod/at/json' },
+    hongniu: { url: 'https://www.hongniuzy2.com/api.php/provide/vod/at/json' },
+    sdzy: { url: 'https://sdzyapi.com/api.php/provide/vod/at/json' },
+    suoni: { url: 'https://suoniapi.com/api.php/provide/vod/at/json' },
+    mody: { url: 'https://www.mdzyapi.com/api.php/provide/vod/at/json' },
+    tianya: { url: 'https://tyyszyapi.com/api.php/provide/vod/at/json' },
+    bdzy: { url: 'https://api.apibdzy.com/api.php/provide/vod/at/json' },
     alist: [
         {
             name: '🐉神族九帝',

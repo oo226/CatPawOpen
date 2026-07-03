@@ -1,32 +1,16 @@
 {
     "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5",
     "sites": [
-        {
-            "key": "nodejs_myvideo",
-            "name": "我的影视",
-            "type": 3,
-            "api": "csp_myvideo",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 0
-        },
-        {
-            "key": "nodejs_ffm3u8",
-            "name": "非凡采集",
-            "type": 3,
-            "api": "csp_ffm3u8",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 0
-        },
-        {
-            "key": "nodejs_push",
-            "name": "推送",
-            "type": 4,
-            "api": "csp_push",
-            "searchable": 0,
-            "filterable": 0
-        }
+        { "key": "nodejs_ffm3u8", "name": "非凡采集", "type": 3, "api": "csp_ffm3u8", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_lzi", "name": "量子资源", "type": 3, "api": "csp_lzi", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_okzy", "name": "OK资源", "type": 3, "api": "csp_okzy", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_hongniu", "name": "红牛资源", "type": 3, "api": "csp_hongniu", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_sdzy", "name": "闪电资源", "type": 3, "api": "csp_sdzy", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_suoni", "name": "索尼资源", "type": 3, "api": "csp_suoni", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_mody", "name": "魔都资源", "type": 3, "api": "csp_mody", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_tianya", "name": "天涯资源", "type": 3, "api": "csp_tianya", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_bdzy", "name": "百度云资源", "type": 3, "api": "csp_bdzy", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_push", "name": "推送", "type": 4, "api": "csp_push", "searchable": 0 }
     ],
     "parses": [],
     "flags": [],
