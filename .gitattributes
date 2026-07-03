@@ -1,0 +1,2 @@
+# douer 引擎为预编译单文件，禁止 CRLF 转换以免 md5 漂移
+nodejs/vendor/douer/index.js -text

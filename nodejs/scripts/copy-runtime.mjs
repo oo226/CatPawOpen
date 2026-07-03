@@ -23,7 +23,9 @@ fs.writeFileSync(distJs, buf);
 const md5 = createHash('md5').update(buf).digest('hex');
 const pinned = fs.existsSync(vendorMd5) ? fs.readFileSync(vendorMd5, 'utf8').trim() : '';
 if (pinned && pinned !== md5) {
-    console.warn(`vendor md5 mismatch: file=${md5} pinned=${pinned}`);
+    console.error(`vendor md5 mismatch: file=${md5} pinned=${pinned}`);
+    console.error('Run: npm run vendor:refresh');
+    process.exit(1);
 }
 fs.writeFileSync(distMd5, md5);
 

@@ -18,7 +18,7 @@ npm start        # 生产运行（固定 3006 端口）
 2. Push 后 GitHub Actions 会构建并发布到 `dist` 分支
 3. 构建时会：
    - 编译 **index.config.js**（配置页、弹幕、网盘、直播等，对齐 [Darklessing/catvod douer](https://github.com/Darklessing/catvod/tree/main/douer) 结构）
-   - 拉取 **index.js 完整运行时**（约 4MB，与 douer 同档）
+   - 从仓库内 **vendor/douer** 复制 **index.js 完整运行时**（约 4MB，与 douer 同档，构建不访问外网）
 4. 在 MiraPlay 填入：
 
 ```json
