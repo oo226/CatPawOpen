@@ -4,8 +4,9 @@ import _13bqg from './spider/book/13bqg.js';
 import copymanga from './spider/book/copymanga.js';
 import ffm3u8 from './spider/video/ffm3u8.js';
 import cmsources from './spider/video/cmsources.js';
+import xgcartoon from './spider/video/xgcartoon.js';
 
-const spiders = [ffm3u8, ...cmsources, push, alist, _13bqg, copymanga];
+const spiders = [ffm3u8, ...cmsources, xgcartoon, push, alist, _13bqg, copymanga];
 const spiderPrefix = '/spider'; // API 路由前缀
 
 /**

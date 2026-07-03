@@ -10,6 +10,7 @@
         { "key": "nodejs_mody", "name": "魔都资源", "type": 3, "api": "csp_mody", "searchable": 1, "quickSearch": 1 },
         { "key": "nodejs_tianya", "name": "天涯资源", "type": 3, "api": "csp_tianya", "searchable": 1, "quickSearch": 1 },
         { "key": "nodejs_bdzy", "name": "百度云资源", "type": 3, "api": "csp_bdzy", "searchable": 1, "quickSearch": 1 },
+        { "key": "nodejs_xgcartoon", "name": "西瓜卡通", "type": 3, "api": "csp_xgcartoon", "searchable": 1, "quickSearch": 1 },
         { "key": "nodejs_push", "name": "推送", "type": 4, "api": "csp_push", "searchable": 0 }
     ],
     "parses": [],
