@@ -1,0 +1,35 @@
+{
+    "spider": "github://你的用户名/CatPawOpen@dist/nodejs/dist/index.config.js.md5",
+    "sites": [
+        {
+            "key": "nodejs_myvideo",
+            "name": "我的影视",
+            "type": 3,
+            "api": "csp_myvideo",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "nodejs_ffm3u8",
+            "name": "非凡采集",
+            "type": 3,
+            "api": "csp_ffm3u8",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0
+        },
+        {
+            "key": "nodejs_push",
+            "name": "推送",
+            "type": 4,
+            "api": "csp_push",
+            "searchable": 0,
+            "filterable": 0
+        }
+    ],
+    "parses": [],
+    "flags": [],
+    "ijk": [],
+    "ads": []
+}
