@@ -8,7 +8,7 @@ esbuild.build({
     bundle: true,
     minify: true,
     write: true,
-    format: 'cjs',
+    format: 'esm',
     platform: 'node',
     target: 'node18',
     plugins: [genMd5()],

@@ -56,7 +56,7 @@ cd nodejs && npm install && npm start
 
 非凡、量子、OK、红牛、闪电、索尼、魔都、天涯、百度云等 MacCMS 采集在 `index.config.js` 的 `cms.list` 中。
 
-菜单只显示一个 **「采」采集** 入口（与 douer 一致）：`cmshub` 聚合搜索，结果按资源站名称分组为二级；配置里 `sites.list` 将各子源设为 `enable: false` 避免平铺。
+菜单只显示一个 **「采」采集** 入口：`cms.list` 留空避免 douer 展开子源，`cms.hub` 存采集地址，由 `cmshub` 聚合（HTTPS 远程加载）。
 
 ## 开发新爬虫
 
