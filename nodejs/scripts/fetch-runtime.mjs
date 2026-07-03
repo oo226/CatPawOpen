@@ -1,76 +1,84 @@
+/**
+ * 从上游下载 douer 引擎到 vendor/douer/（仅手动更新时用，日常 build 不跑此脚本）
+ *
+ * npm run vendor:refresh
+ * 可选: CATPAW_RUNTIME_URL=https://.../index.js
+ */
 import fs from 'fs';
 import https from 'https';
 import http from 'http';
 import { createHash } from 'crypto';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const BASES = [
-    process.env.CATPAW_RUNTIME_URL,
-    'https://raw.githubusercontent.com/Darklessing/catvod/main/douer',
-    'https://ghproxy.net/https://raw.githubusercontent.com/Darklessing/catvod/main/douer',
-].filter(Boolean);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.join(__dirname, '..');
+const vendorDir = path.join(root, 'vendor/douer');
+const vendorJs = path.join(vendorDir, 'index.js');
+const vendorMd5 = path.join(vendorDir, 'index.js.md5');
 
-function download(url, redirects = 0) {
+const DEFAULT_URLS = [
+    'https://raw.githubusercontent.com/Darklessing/catvod/main/douer/index.js',
+    'https://ghproxy.net/https://raw.githubusercontent.com/Darklessing/catvod/main/douer/index.js',
+];
+
+function fetchUrl(url, timeout = 120000) {
     return new Promise((resolve, reject) => {
-        const lib = url.startsWith('https') ? https : http;
-        lib
-            .get(url, { timeout: 120000 }, (res) => {
-                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && redirects < 5) {
-                    download(res.headers.location, redirects + 1).then(resolve, reject);
-                    return;
-                }
-                if (res.statusCode !== 200) {
-                    reject(new Error(`HTTP ${res.statusCode} for ${url}`));
-                    res.resume();
-                    return;
-                }
-                const chunks = [];
-                res.on('data', (c) => chunks.push(c));
-                res.on('end', () => resolve(Buffer.concat(chunks)));
-            })
-            .on('error', reject);
+        const mod = url.startsWith('https') ? https : http;
+        const req = mod.get(url, { timeout }, (res) => {
+            if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                fetchUrl(res.headers.location, timeout).then(resolve).catch(reject);
+                return;
+            }
+            if (res.statusCode !== 200) {
+                reject(new Error(`HTTP ${res.statusCode} for ${url}`));
+                return;
+            }
+            const chunks = [];
+            res.on('data', (c) => chunks.push(c));
+            res.on('end', () => resolve(Buffer.concat(chunks)));
+        });
+        req.on('error', reject);
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error(`timeout: ${url}`));
+        });
     });
 }
 
-async function fetchWithRetry(url, tries = 3) {
-    let lastErr;
-    for (let i = 0; i < tries; i++) {
-        try {
-            return await download(url);
-        } catch (err) {
-            lastErr = err;
-            await new Promise((r) => setTimeout(r, 2000 * (i + 1)));
-        }
-    }
-    throw lastErr;
-}
-
 async function main() {
-    fs.mkdirSync('dist', { recursive: true });
-    let jsBuf = null;
-    let usedBase = '';
+    const urls = process.env.CATPAW_RUNTIME_URL
+        ? [process.env.CATPAW_RUNTIME_URL]
+        : DEFAULT_URLS;
 
-    for (const base of BASES) {
+    let buf = null;
+    let from = '';
+    for (const url of urls) {
         try {
-            console.log(`Fetching runtime from ${base}`);
-            jsBuf = await fetchWithRetry(`${base}/index.js`);
-            usedBase = base;
+            console.log(`fetching ${url} ...`);
+            buf = await fetchUrl(url, 600000);
+            from = url;
             break;
-        } catch (err) {
-            console.warn(`Failed ${base}: ${err.message}`);
+        } catch (e) {
+            console.warn(`failed: ${e.message}`);
         }
     }
-
-    if (!jsBuf || jsBuf.length < 1000000) {
-        throw new Error('Could not download douer index.js (need ~4MB runtime)');
+    if (!buf || buf.length < 100000) {
+        console.error('Could not download runtime (need ~4MB index.js)');
+        process.exit(1);
     }
 
-    fs.writeFileSync('dist/index.js', jsBuf);
-    const md5 = createHash('md5').update(jsBuf).digest('hex');
-    fs.writeFileSync('dist/index.js.md5', md5);
-    console.log(`OK ${usedBase} -> index.js ${(jsBuf.length / 1024 / 1024).toFixed(2)} MB md5=${md5}`);
+    fs.mkdirSync(vendorDir, { recursive: true });
+    fs.writeFileSync(vendorJs, buf);
+    const md5 = createHash('md5').update(buf).digest('hex');
+    fs.writeFileSync(vendorMd5, md5);
+
+    console.log(`saved vendor/douer/index.js (${(buf.length / 1024 / 1024).toFixed(2)} MB, md5=${md5})`);
+    console.log(`source: ${from}`);
+    console.log('commit vendor/douer/ then run npm run build');
 }
 
-main().catch((err) => {
-    console.error('fetch-runtime failed:', err.message);
+main().catch((e) => {
+    console.error(e);
     process.exit(1);
 });
