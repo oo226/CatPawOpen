@@ -12,13 +12,14 @@ const distDir = path.join(root, 'dist');
 const distJs = path.join(distDir, 'index.js');
 const distMd5 = path.join(distDir, 'index.js.md5');
 
-const CMS_FOREACH = '(await Hce(t)).forEach(o=>{r.push(Vce(o.name,o.address))});';
-const CMS_FOREACH_PATCH = '(await Hce(t)).length>0&&r.push(__catpawCmshub);';
+// douer 2026-07-14 minify symbols (was Hce/Vce/Fce/FIr/H0t)
+const CMS_FOREACH = '(await Wde(t)).forEach(o=>{r.push(Fde(o.name,o.address))});';
+const CMS_FOREACH_PATCH = '(await Wde(t)).length>0&&r.push(__catpawCmshub);';
 
-const HCE_FALLBACK = 'return Fce(r.length>0?r:FIr)';
-const HCE_FALLBACK_PATCH = 'return Fce(r)';
+const HCE_FALLBACK = 'return Dde(r.length>0?r:JDr)';
+const HCE_FALLBACK_PATCH = 'return Dde(r)';
 
-const SERVER_ANCHOR = 'var H0t=Object.create';
+const SERVER_ANCHOR = 'var oxt=Object.create';
 
 if (!fs.existsSync(vendorJs)) {
     console.error('Missing vendor/douer/index.js — run: npm run vendor:refresh');
@@ -29,7 +30,7 @@ if (!fs.existsSync(hubCjs)) {
     process.exit(1);
 }
 
-const pinned = fs.existsSync(vendorMd5) ? fs.readFileSync(vendorMd5, 'utf8').trim() : '';
+const pinned = fs.existsSync(vendorMd5) ? fs.readFileSync(vendorMd5, 'utf8').trim().toLowerCase() : '';
 const vendorBuf = fs.readFileSync(vendorJs);
 const vendorHash = createHash('md5').update(vendorBuf).digest('hex');
 if (pinned && pinned !== vendorHash) {

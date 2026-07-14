@@ -24,38 +24,122 @@ export default {
         cookie: '',
     },
     uc: {
-        cookie: 'cookie',
-        token: 'token',
-        ut: 'ut',
+        cookie: '',
+        token: '',
+        ut: '',
     },
     y115: {
         cookie: '',
+        offline: {
+            savePath: '0',
+            pollAttempts: 6,
+            pollIntervalMs: 1500,
+        },
     },
     baidu: {
         cookie: '',
     },
+    tianyi: {
+        username: '',
+        password: '',
+    },
+    pan123: {
+        username: '',
+        password: '',
+    },
+    // 网盘站域名表对齐上游 douer / peekpro 包（引擎读 *.urls）
     muou: {
-        url: '',
+        urls: ['https://123.666291.xyz', 'https://666.666291.xyz', 'https://www.muou.asia', 'https://www.muou.site'],
     },
     wanou: {
-        url: '',
+        urls: [],
+    },
+    wogg: {
+        urls: [
+            'https://wogg.333232.xyz',
+            'https://wogg.xxooo.cf',
+            'https://woggpan.888484.xyz',
+            'https://www.wogg.lol',
+            'https://www.wogg.one',
+        ],
     },
     leijing: {
-        url: '',
+        urls: ['https://www.leijing1.com', 'https://leijing1.com', 'https://www.leijing.xyz'],
+    },
+    duoduo: {
+        urls: ['https://tv.214521.xyz', 'https://tv.yydsys.cc', 'https://tv.yydsys.top'],
+    },
+    zhizhen: {
+        urls: [
+            'http://www.miqk.cc',
+            'https://mihdr.top',
+            'https://www.mihdr.top',
+            'https://www.miqk.cc',
+            'https://www.zhizhenpan.fun',
+            'https://xiaomi666.fun',
+            'https://xiaomiai.site',
+        ],
+    },
+    ouge: {
+        urls: ['https://woog.430520.xyz', 'https://woog.nxog.eu.org', 'https://woog.nxog.fun'],
+    },
+    labi: {
+        urls: [
+            'http://feimo.fun',
+            'http://fmao.shop',
+            'http://fmao.site',
+            'http://xiaocge.fun',
+            'http://xiaocgege.shop',
+            'https://feimao666.fun',
+        ],
+    },
+    huban: {
+        urls: ['http://38.76.197.172:16969', 'http://xhban.xyz:20720'],
+    },
+    erxiao: {
+        urls: [
+            'https://www.2xiaopan.top/',
+            'https://2xiaopan.top/',
+            'https://www.erxiaozhan.top/',
+            'https://www.2xiaozhan.top/',
+            'https://wexwp.cc/',
+        ],
+    },
+    shandian: {
+        urls: ['http://shandian.blog', 'https://sd.sduc.site'],
     },
     tgsou: {
-        tgPic: false,
-        count: '',
-        url: '',
-        channelUsername: '',
+        tgPic: true,
+        count: 0,
+        url: 'https://tgsou.lmentor.dpdns.org',
+        channelUsername:
+            'tgsearchers7,Aliyun_4K_Movies,Quark_Movies,shareAliyun,ydypzyfx,ucquark,xx123pan,Yingshifenxiang123',
     },
     pansou: {
-        url: '',
+        url: 'https://so.hk.111651.xyz',
         channels: '',
         plugins: '',
         cloudTypes: '',
     },
-    tgchannel: {},
+    tgchannel: {
+        url: 'https://t.me',
+        count: 4,
+        enableImage: true,
+        homeChannelUsername: ['tgsearchers7', 'douerpan'],
+        channelUsername: [
+            'Q66Share',
+            'alyp_TV',
+            'ucquark',
+            'tianyirigeng',
+            'Quark_Movies',
+            'shareAliyun',
+            'xx123pan',
+        ],
+        channelRemark: {
+            tgsearchers7: '资源宇宙',
+            douerpan: '豆儿盘',
+        },
+    },
     tgfilebot: {
         url: 'http://127.0.0.1:8080',
         password: '',
@@ -68,6 +152,7 @@ export default {
     },
     danmu: {
         urls: [{ address: builtinDanmuAddress, name: '内置弹幕', builtin: true }],
+        format: 'xml',
         autoPush: true,
         debug: false,
     },
@@ -77,6 +162,7 @@ export default {
     cms: {
         list: cmsSources,
     },
+    // 本地 JS spider：引擎支持 createSpider；默认关闭远程 urls，可按 docs 上传到 dir
     customSpiders: {
         enabled: false,
         dir: '',
@@ -86,6 +172,10 @@ export default {
         cacheTtlMs: 5000,
         factoryTimeoutMs: 10000,
         urlTimeoutMs: 10000,
+    },
+    bilibili: {
+        cookie: '',
+        classes: '',
     },
     live2vod: {
         sources: [

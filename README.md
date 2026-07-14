@@ -58,6 +58,9 @@ cd nodejs && npm install && npm start
 
 菜单只显示一个 **「采」采集** 入口：采集地址写在 `cms.list`（与 lmentor 相同），构建时把 `cmshub` 注入 `index.js` 聚合多源，且不再回退默认电影天堂。
 
+引擎固化自 Darklessing douer（2026-07-14，`0c6fdbe`）。本地局域网试源可看 `nodejs/scripts/serve-local.py`；上传 JS spider 规范见 `nodejs/docs/js-spider.md`。
+
+
 ## 开发新爬虫
 
 1. 在 `nodejs/src/spider/video/` 新建 `.js` 文件

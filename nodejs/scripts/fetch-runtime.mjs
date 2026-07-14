@@ -70,7 +70,7 @@ async function main() {
 
     fs.mkdirSync(vendorDir, { recursive: true });
     fs.writeFileSync(vendorJs, buf);
-    const md5 = createHash('md5').update(buf).digest('hex');
+    const md5 = createHash('md5').update(buf).digest('hex').toLowerCase();
     fs.writeFileSync(vendorMd5, md5);
 
     console.log(`saved vendor/douer/index.js (${(buf.length / 1024 / 1024).toFixed(2)} MB, md5=${md5})`);

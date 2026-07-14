@@ -16,3 +16,5 @@ npm run vendor:refresh
 ```
 
 默认来源：`Darklessing/catvod` 的 `douer/index.js`。拉取后会更新本目录并需提交 Git。
+
+当前固化版本（2026-07-14）：`0c6fdbe175f9a2901f707f6ef5107c05`

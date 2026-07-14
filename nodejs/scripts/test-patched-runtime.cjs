@@ -31,9 +31,16 @@ const config = {
 
 eval(fs.readFileSync(path.join(root, 'dist/index.js'), 'utf8'));
 
-lOr(config)
+const start = typeof WMr === 'function' ? WMr : typeof lOr === 'function' ? lOr : null;
+const stop = typeof $Mr === 'function' ? $Mr : typeof dOr === 'function' ? dOr : null;
+if (!start || !stop) {
+    console.error('start/stop not found after eval', { WMr: typeof WMr, $Mr: typeof $Mr, lOr: typeof lOr, dOr: typeof dOr });
+    process.exit(1);
+}
+
+start(config)
     .then(async () => {
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, 3500));
         const res = await fetch('http://127.0.0.1:3041/config');
         const data = await res.json();
         const sites = data.video?.sites || [];
@@ -41,7 +48,7 @@ lOr(config)
         cms.forEach((s) => console.log(`  ${s.key} | ${s.name} | cms=${s.cms}`));
         const dytt = sites.filter((s) => (s.name || '').includes('电影天堂'));
         console.log('cms count:', cms.length, '电影天堂 count:', dytt.length);
-        await dOr();
+        await stop();
         process.exit(cms.length === 1 && dytt.length === 0 ? 0 : 2);
     })
     .catch((e) => {
