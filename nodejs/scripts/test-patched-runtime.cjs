@@ -34,7 +34,12 @@ eval(fs.readFileSync(path.join(root, 'dist/index.js'), 'utf8'));
 const start = typeof WMr === 'function' ? WMr : typeof lOr === 'function' ? lOr : null;
 const stop = typeof $Mr === 'function' ? $Mr : typeof dOr === 'function' ? dOr : null;
 if (!start || !stop) {
-    console.error('start/stop not found after eval', { WMr: typeof WMr, $Mr: typeof $Mr, lOr: typeof lOr, dOr: typeof dOr });
+    console.error('start/stop not found after eval', {
+        WMr: typeof WMr,
+        $Mr: typeof $Mr,
+        lOr: typeof lOr,
+        dOr: typeof dOr,
+    });
     process.exit(1);
 }
 
@@ -46,10 +51,10 @@ start(config)
         const sites = data.video?.sites || [];
         const cms = sites.filter((s) => s.cms || (s.name || '').includes('采'));
         cms.forEach((s) => console.log(`  ${s.key} | ${s.name} | cms=${s.cms}`));
-        const dytt = sites.filter((s) => (s.name || '').includes('电影天堂'));
-        console.log('cms count:', cms.length, '电影天堂 count:', dytt.length);
+        console.log('cms count:', cms.length);
         await stop();
-        process.exit(cms.length === 1 && dytt.length === 0 ? 0 : 2);
+        // stock douer: one Vce spider per cms.list entry
+        process.exit(cms.length === cmsSources.length ? 0 : 2);
     })
     .catch((e) => {
         console.error(e);

@@ -1,8 +1,10 @@
 /**
- * 检测上游 douer 是否有更新（只检测，不自动合入）。
+ * 检测上游 douer 是否有更新。
  *
  * npm run vendor:check
- * 退出码: 0=一致, 2=有更新, 1=检测失败
+ * 退出码: 0=检测成功（是否更新看 outputs / 日志）, 1=检测失败
+ *
+ * CI 通过 GITHUB_OUTPUT 读取 changed/local/remote。
  */
 import fs from 'fs';
 import https from 'https';
@@ -110,8 +112,7 @@ async function main() {
         process.exit(0);
     }
 
-    console.log('upstream: UPDATED — do NOT auto-merge; minify symbols may break CMS patches.');
-    console.log('next: npm run vendor:refresh && adapt nodejs/scripts/copy-runtime.mjs anchors, then build/test.');
+    console.log('upstream: UPDATED — CI will vendor:refresh and push (plain copy, no patches).');
     process.exit(0);
 }
 

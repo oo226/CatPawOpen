@@ -9,24 +9,20 @@
 
 ## 更新引擎（可选）
 
-先检测是否有更新（不下载）：
+检测：
 
 ```bash
 npm run vendor:check
 ```
 
-确认要跟版时再拉取：
+拉取并固化到本目录：
 
 ```bash
 npm run vendor:refresh
 ```
 
-默认来源：`Darklessing/catvod` 的 `douer/index.js`。拉取后需：
+默认来源：`Darklessing/catvod` 的 `douer/index.js`。拉取后提交 Git，`npm run build` 会原样复制到 `dist/`。
 
-1. 适配 `scripts/copy-runtime.mjs` 补丁锚点（minify 符号常变）
-2. `npm run build && node scripts/test-patched-runtime.cjs`
-3. 提交本目录并部署 `dist`
-
-**不要自动合入。** GitHub Actions `check-upstream.yml` 只开 Issue 提醒。
+GitHub Actions `sync-upstream.yml` 每天检测；有更新会自动 `vendor:refresh` 并推送 master（触发 deploy）。
 
 当前固化版本（2026-07-14）：`0c6fdbe175f9a2901f707f6ef5107c05`

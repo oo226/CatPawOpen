@@ -1,0 +1,48 @@
+name: Sync Upstream Douer
+
+# 检测上游 douer；有更新则自动拉取 vendor 并推送到 master（触发 deploy）。
+# 引擎已取消 cmshub 补丁，可安全原样同步。
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Compare vendor md5 with upstream
+        id: check
+        working-directory: nodejs
+        run: node scripts/check-upstream.mjs
+
+      - name: Refresh vendor when changed
+        if: steps.check.outputs.changed == 'true'
+        working-directory: nodejs
+        run: npm run vendor:refresh
+
+      - name: Commit and push vendor update
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nodejs/vendor/douer/index.js nodejs/vendor/douer/index.js.md5
+          if git diff --cached --quiet; then
+            echo "no file changes after refresh"
+            exit 0
+          fi
+          REMOTE="${{ steps.check.outputs.remote }}"
+          git commit -m "chore: sync upstream douer ${REMOTE}"
+          git push origin HEAD:${{ github.ref_name }}

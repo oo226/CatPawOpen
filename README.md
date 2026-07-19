@@ -54,11 +54,9 @@ cd nodejs && npm install && npm start
 
 ## 预置采集（cms.list）
 
-非凡、量子、OK、红牛、闪电、索尼、魔都、天涯、百度云等 MacCMS 采集在 `index.config.js` 的 `cms.list` 中。
+非凡、量子、OK、红牛、闪电、索尼、魔都、天涯、百度云等 MacCMS 采集在 `index.config.js` 的 `cms.list` 中。douer 会为每条注册一个「采」菜单项（与上游一致，不再做 cmshub 聚合）。
 
-菜单只显示一个 **「采」采集** 入口：采集地址写在 `cms.list`（与 lmentor 相同），构建时把 `cmshub` 注入 `index.js` 聚合多源，且不再回退默认电影天堂。
-
-引擎固化自 Darklessing douer（2026-07-14，`0c6fdbe`）。本地局域网试源可看 `nodejs/scripts/serve-local.py`；上传 JS spider 规范见 `nodejs/docs/js-spider.md`。
+引擎固化自 Darklessing douer（当前 `0c6fdbe`）。上游更新由 Actions `sync-upstream.yml` 自动检测并拉取；本地也可 `npm run vendor:check` / `vendor:refresh`。局域网试源见 `nodejs/scripts/serve-local.py`；JS spider 规范见 `nodejs/docs/js-spider.md`。
 
 
 ## 开发新爬虫
