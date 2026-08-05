@@ -3,6 +3,9 @@ name: Sync Upstream Douer
 # 检测上游 douer；有更新则自动拉取 vendor、推送到 master，并重建部署 dist。
 # 注意：用 GITHUB_TOKEN 推 master 不会触发 deploy.yml（防循环），
 # 因此本 workflow 内必须自行 build + force-push dist。
+#
+# 上游删库 / 拉不到：check 软失败（reachable=false），保留本仓库 vendor，
+# 日常构建与手机 dist 不受影响；仅跳过本次更新。
 
 on:
   schedule:
@@ -31,9 +34,17 @@ jobs:
         working-directory: nodejs
         run: node scripts/check-upstream.mjs
 
+      - name: Skip when upstream unreachable
+        if: steps.check.outputs.reachable == 'false'
+        run: |
+          echo "Upstream Darklessing/catvod unreachable — keeping pinned vendor ${{ steps.check.outputs.local }}"
+          echo "Phone/dist continue to use this repo snapshot; no update this run."
+
       - name: Refresh vendor when changed
         if: steps.check.outputs.changed == 'true'
         working-directory: nodejs
+        env:
+          EXPECTED_MD5: ${{ steps.check.outputs.remote }}
         run: npm run vendor:refresh
 
       - name: Commit and push vendor update
