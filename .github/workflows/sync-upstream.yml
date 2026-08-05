@@ -1,7 +1,11 @@
 name: Sync Upstream Douer
 
-# 检测上游 douer；有更新则自动拉取 vendor 并推送到 master（触发 deploy）。
-# 引擎已取消 cmshub 补丁，可安全原样同步。
+# 检测上游 douer；有更新则自动拉取 vendor、推送到 master，并重建部署 dist。
+# 注意：用 GITHUB_TOKEN 推 master 不会触发 deploy.yml（防循环），
+# 因此本 workflow 内必须自行 build + force-push dist。
+#
+# 上游删库 / 拉不到：check 软失败（reachable=false），保留本仓库 vendor，
+# 日常构建与手机 dist 不受影响；仅跳过本次更新。
 
 on:
   schedule:
@@ -22,15 +26,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+          cache-dependency-path: nodejs/package-lock.json
 
       - name: Compare vendor md5 with upstream
         id: check
         working-directory: nodejs
         run: node scripts/check-upstream.mjs
 
+      - name: Skip when upstream unreachable
+        if: steps.check.outputs.reachable == 'false'
+        run: |
+          echo "Upstream Darklessing/catvod unreachable — keeping pinned vendor ${{ steps.check.outputs.local }}"
+          echo "Phone/dist continue to use this repo snapshot; no update this run."
+
       - name: Refresh vendor when changed
         if: steps.check.outputs.changed == 'true'
         working-directory: nodejs
+        env:
+          EXPECTED_MD5: ${{ steps.check.outputs.remote }}
         run: npm run vendor:refresh
 
       - name: Commit and push vendor update
@@ -46,3 +60,24 @@ jobs:
           REMOTE="${{ steps.check.outputs.remote }}"
           git commit -m "chore: sync upstream douer ${REMOTE}"
           git push origin HEAD:${{ github.ref_name }}
+
+      - name: Install and build
+        if: steps.check.outputs.changed == 'true'
+        working-directory: nodejs
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to dist branch
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          mkdir -p deploy/nodejs
+          cp -r nodejs/dist deploy/nodejs/
+          cd deploy
+          git init
+          git checkout -b dist
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "deploy: sync upstream $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dist
