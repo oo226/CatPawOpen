@@ -265,7 +265,10 @@ function loadImage(file) {
 }
 
 async function canvasesToPdfBlob(canvases) {
-  const { jsPDF } = window.jspdf;
+  const jsPDF = window.jspdf?.jsPDF;
+  if (!jsPDF) {
+    throw new Error("去污 PDF 导出组件未加载（不影响 Word 下载）");
+  }
   let pdf = null;
   for (let i = 0; i < canvases.length; i++) {
     const c = canvases[i];

@@ -141,7 +141,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
   <script src="cleaner.js"></script>
   <script src="pdf-checker.js"></script>
   <script src="scan-ocr.js"></script>
@@ -270,7 +270,13 @@
         }, (msg) => { statusEl.textContent = msg; });
 
         const wordBlob = await buildDocx(result.paragraphs);
-        const pdfBlob = await canvasesToPdfBlob(result.cleanedPages);
+        let pdfBlob = null;
+        let pdfWarn = "";
+        try {
+          pdfBlob = await canvasesToPdfBlob(result.cleanedPages);
+        } catch (e) {
+          pdfWarn = `<p style="margin-top:8px;color:#92400e">提示：去污 PDF 导出失败（不影响 Word 文字版下载）。</p>`;
+        }
         const base = scanFile.name.replace(/\.[^.]+$/, "");
 
         clearDownloads();
@@ -279,10 +285,12 @@
           <div class="stat-item"><div class="num">${result.pageCount}</div><div class="label">处理页数</div></div>
           <div class="stat-item"><div class="num">${result.paragraphs.length}</div><div class="label">识别段落</div></div>
           <div class="stat-item"><div class="num">${result.charCount}</div><div class="label">识别字数</div></div>`;
-        document.getElementById("extraArea").innerHTML = `<div class="check-banner ok">去污 + OCR 完成。可下载 Word 文字版，或下载去污后的 PDF 图片。</div>`;
+        document.getElementById("extraArea").innerHTML = `<div class="check-banner ok">去污 + OCR 完成。可下载 Word 文字版。${pdfWarn}</div>`;
         document.getElementById("downloadArea").innerHTML = "";
         addDownload(wordBlob, base + "_识别.docx", "⬇ 下载 Word 文字版");
-        addDownload(pdfBlob, base + "_去污.pdf", "⬇ 下载去污 PDF", "btn-secondary");
+        if (pdfBlob) {
+          addDownload(pdfBlob, base + "_去污.pdf", "⬇ 下载去污 PDF", "btn-secondary");
+        }
         document.getElementById("result").scrollIntoView({ behavior: "smooth" });
       } catch (err) {
         alert("处理失败：" + err.message);
