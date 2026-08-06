@@ -4,73 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Word 文档一键整理</title>
-  <meta name="description" content="修复扫描/OCR 转 Word 后的乱版问题，纯浏览器运行，无需安装软件" />
   <style>
     :root {
-      --bg: #f0f4f8;
-      --card: #fff;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --border: #e2e8f0;
-      --text: #1e293b;
-      --muted: #64748b;
-      --ok: #16a34a;
-      --warn: #d97706;
-      --err: #dc2626;
+      --bg: #f0f4f8; --card: #fff; --primary: #2563eb; --primary-hover: #1d4ed8;
+      --border: #e2e8f0; --text: #1e293b; --muted: #64748b;
+      --ok: #16a34a; --warn: #d97706; --err: #dc2626;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
+    body { margin: 0; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
     .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
-    header { text-align: center; margin-bottom: 24px; }
+    header { text-align: center; margin-bottom: 20px; }
     header h1 { margin: 0 0 8px; font-size: 1.75rem; }
     header p { margin: 0; color: var(--muted); }
-    .badge {
-      display: inline-block; margin-top: 10px; padding: 4px 14px;
-      border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 0.82rem;
+    .badge { display: inline-block; margin-top: 10px; padding: 4px 14px; border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 0.82rem; }
+    .privacy { margin-top: 10px; padding: 10px 14px; background: #eff6ff; border-radius: 8px; font-size: 0.85rem; color: #1e40af; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab {
+      flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--card); cursor: pointer; text-align: center; font-size: 0.95rem;
     }
-    .privacy {
-      margin-top: 10px; padding: 10px 14px; background: #eff6ff;
-      border-radius: 8px; font-size: 0.85rem; color: #1e40af;
-    }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px; margin-bottom: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.04);
-    }
+    .tab.active { border-color: var(--primary); background: #eff6ff; color: var(--primary); font-weight: 600; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
     .card h2 { margin: 0 0 12px; font-size: 1rem; }
     .dropzone {
       border: 2px dashed var(--border); border-radius: 10px; padding: 28px 16px;
       text-align: center; cursor: pointer; background: #fafbfc;
-      transition: border-color .2s, background .2s;
     }
     .dropzone:hover, .dropzone.dragover { border-color: var(--primary); background: #dbeafe; }
     .dropzone .icon { font-size: 2rem; margin-bottom: 6px; }
     .dropzone .hint { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
-    .file-chip {
-      display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
-      padding: 6px 14px; background: #f1f5f9; border-radius: 8px; font-size: 0.9rem;
-    }
+    .file-chip { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 6px 14px; background: #f1f5f9; border-radius: 8px; font-size: 0.9rem; }
     .file-chip button { border: none; background: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; }
-    .options { display: flex; align-items: center; gap: 8px; margin: 14px 0; font-size: 0.9rem; }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 12px 28px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
-    }
+    .options { display: flex; flex-wrap: wrap; gap: 12px 16px; margin: 14px 0; font-size: 0.9rem; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 28px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
     .btn-primary { background: var(--primary); color: #fff; width: 100%; }
     .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
     .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
-    .btn-download { background: var(--ok); color: #fff; text-decoration: none; margin-top: 12px; }
+    .btn-download { background: var(--ok); color: #fff; text-decoration: none; margin: 8px 8px 0 0; }
+    .btn-secondary { background: #64748b; color: #fff; text-decoration: none; margin: 8px 8px 0 0; }
     .hidden { display: none !important; }
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 10px; margin: 12px 0;
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 12px 0; }
     .stat-item { background: #f8fafc; border-radius: 8px; padding: 12px; text-align: center; }
     .stat-item .num { font-size: 1.35rem; font-weight: 700; color: var(--primary); }
     .stat-item .label { font-size: 0.78rem; color: var(--muted); }
@@ -78,11 +51,10 @@
     .check-banner.ok { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
     .check-banner.warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
     .check-banner.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .check-banner.info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
     .missing-list { margin: 8px 0 0; padding-left: 20px; font-size: 0.85rem; max-height: 180px; overflow-y: auto; }
-    .spinner {
-      display: inline-block; width: 18px; height: 18px; border: 2px solid #fff;
-      border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite;
-    }
+    .status-bar { text-align: center; color: var(--muted); font-size: 0.88rem; margin: 8px 0; min-height: 1.4em; }
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 20px; }
   </style>
@@ -91,76 +63,107 @@
   <div class="wrap">
     <header>
       <h1>Word 文档一键整理</h1>
-      <p>修复扫描/OCR 转 Word 后的乱版：文本框错位、竖排文字、段落断裂</p>
-      <span class="badge">在线版 · 打开就能用 · 不用装任何东西</span>
-      <div class="privacy">🔒 所有处理都在你的浏览器里完成，文件<strong>不会上传到服务器</strong></div>
+      <p>乱版 Word 修复 · 扫描件去污识别 · 全在浏览器里完成</p>
+      <span class="badge">在线版 · 不用装软件</span>
+      <div class="privacy">🔒 文件<strong>不会上传</strong>到服务器，全在你电脑浏览器里处理</div>
     </header>
 
-    <div class="card">
-      <h2>① 拖入乱版 Word 文件 <span style="color:var(--err)">*</span></h2>
-      <div class="dropzone" id="dropDocx">
-        <div class="icon">📄</div>
-        <div>拖拽 .docx 到此处，或点击选择</div>
-        <div class="hint">支持 Word / WPS 的 .docx 格式</div>
-        <div id="docxChip" class="hidden"></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="word">📄 乱版 Word 整理</div>
+      <div class="tab" data-tab="scan">📷 扫描件/图片 OCR</div>
+    </div>
+
+    <!-- 模式1：乱版 Word -->
+    <div id="panelWord">
+      <div class="card">
+        <h2>① 拖入乱版 Word <span style="color:var(--err)">*</span></h2>
+        <div class="dropzone" id="dropDocx">
+          <div class="icon">📄</div>
+          <div>拖拽 .docx 到此处，或点击选择</div>
+          <div class="hint">OCR 转 Word 后排版乱了用这个</div>
+          <div id="docxChip" class="hidden"></div>
+        </div>
+        <input type="file" id="inputDocx" accept=".docx" class="hidden" />
       </div>
-      <input type="file" id="inputDocx" accept=".docx" class="hidden" />
-    </div>
-
-    <div class="card">
-      <h2>② 拖入对照 PDF（可选，检查是否缺段）</h2>
-      <div class="dropzone" id="dropPdf">
-        <div class="icon">📑</div>
-        <div>拖拽 PDF 到此处，或点击选择</div>
-        <div class="hint">用扫描后看着正常的 PDF 做对照</div>
-        <div id="pdfChip" class="hidden"></div>
+      <div class="card">
+        <h2>② 对照 PDF（可选）</h2>
+        <div class="dropzone" id="dropPdf">
+          <div class="icon">📑</div>
+          <div>拖拽 PDF 到此处（需有文字层，纯图片 PDF 请用「扫描件 OCR」）</div>
+          <div id="pdfChip" class="hidden"></div>
+        </div>
+        <input type="file" id="inputPdf" accept=".pdf" class="hidden" />
       </div>
-      <input type="file" id="inputPdf" accept=".pdf" class="hidden" />
+      <div class="options">
+        <label><input type="checkbox" id="keepPageNumbers" /> 保留单独页码</label>
+      </div>
+      <button class="btn btn-primary" id="btnClean" disabled>开始整理 Word</button>
     </div>
 
-    <div class="options">
-      <input type="checkbox" id="keepPageNumbers" />
-      <label for="keepPageNumbers">保留单独页码（如页面中间的 "15"）</label>
+    <!-- 模式2：扫描件 OCR -->
+    <div id="panelScan" class="hidden">
+      <div class="card">
+        <h2>拖入扫描 PDF 或拍照图片 <span style="color:var(--err)">*</span></h2>
+        <div class="dropzone" id="dropScan">
+          <div class="icon">📷</div>
+          <div>支持 PDF（纯图片扫描件）、JPG、PNG</div>
+          <div class="hint">手机拍文件、扫描仪出的图片 PDF 都可以</div>
+          <div id="scanChip" class="hidden"></div>
+        </div>
+        <input type="file" id="inputScan" accept=".pdf,.jpg,.jpeg,.png,.webp" class="hidden" />
+      </div>
+      <div class="card">
+        <h2>图像处理选项</h2>
+        <div class="options">
+          <label><input type="checkbox" id="optDenoise" checked /> 去污去杂点</label>
+          <label><input type="checkbox" id="optWhiten" checked /> 背景漂白</label>
+          <label><input type="checkbox" id="optBlue" checked /> 去蓝笔涂鸦</label>
+          <label><input type="checkbox" id="optRed" checked /> 去红笔涂鸦</label>
+          <label><input type="checkbox" id="optGreen" /> 去绿笔标记</label>
+        </div>
+        <p style="color:var(--muted);font-size:.85rem;margin:0">
+          彩色笔迹（蓝/红/绿）可自动去除。黑色铅笔涂鸦较难自动处理，建议拍照前尽量避开。
+        </p>
+      </div>
+      <button class="btn btn-primary" id="btnOcr" disabled>开始去污 + 识别文字</button>
+      <div class="status-bar" id="ocrStatus"></div>
     </div>
-
-    <button class="btn btn-primary" id="btnClean" disabled>开始整理</button>
 
     <div class="card hidden" id="result">
-      <h2>整理结果</h2>
+      <h2>处理结果</h2>
       <div class="stats-grid" id="statsGrid"></div>
-      <div id="pdfCheckArea"></div>
-      <a class="btn btn-download" id="btnDownload" href="#">⬇ 下载整理后的 Word 文件</a>
+      <div id="extraArea"></div>
+      <div id="downloadArea"></div>
     </div>
 
-    <footer>整理后生成新文件，不会修改你电脑上的原文件</footer>
+    <footer>生成新文件，不修改原文件 · 扫描识别较慢，请耐心等待</footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
   <script src="cleaner.js"></script>
   <script src="pdf-checker.js"></script>
+  <script src="scan-ocr.js"></script>
   <script>
     let pdfjsLib = null;
-    let docxFile = null;
-    let pdfFile = null;
-    let downloadUrl = null;
+    let docxFile = null, pdfFile = null, scanFile = null;
+    let downloadUrls = [];
 
     async function loadPdfJs() {
       if (pdfjsLib) return pdfjsLib;
       pdfjsLib = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
       return pdfjsLib;
     }
 
-    function setupDropzone(dropEl, inputEl, chipEl, acceptExt, onFile) {
+    function setupDropzone(dropEl, inputEl, onFile) {
       dropEl.addEventListener("click", () => inputEl.click());
       dropEl.addEventListener("dragover", (e) => { e.preventDefault(); dropEl.classList.add("dragover"); });
       dropEl.addEventListener("dragleave", () => dropEl.classList.remove("dragover"));
       dropEl.addEventListener("drop", (e) => {
-        e.preventDefault();
-        dropEl.classList.remove("dragover");
-        const file = e.dataTransfer.files[0];
-        if (file) onFile(file);
+        e.preventDefault(); dropEl.classList.remove("dragover");
+        if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
       });
       inputEl.addEventListener("change", () => { if (inputEl.files[0]) onFile(inputEl.files[0]); });
     }
@@ -178,103 +181,131 @@
       chipEl.appendChild(chip);
     }
 
+    function clearDownloads() {
+      downloadUrls.forEach((u) => URL.revokeObjectURL(u));
+      downloadUrls = [];
+    }
+
+    function addDownload(blob, filename, label, cls) {
+      const url = URL.createObjectURL(blob);
+      downloadUrls.push(url);
+      const a = document.createElement("a");
+      a.className = "btn " + (cls || "btn-download");
+      a.href = url;
+      a.download = filename;
+      a.textContent = label;
+      document.getElementById("downloadArea").appendChild(a);
+    }
+
+    // Tabs
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const isScan = tab.dataset.tab === "scan";
+        document.getElementById("panelWord").classList.toggle("hidden", isScan);
+        document.getElementById("panelScan").classList.toggle("hidden", !isScan);
+        document.getElementById("result").classList.add("hidden");
+      });
+    });
+
     const btnClean = document.getElementById("btnClean");
-
-    setupDropzone(
-      document.getElementById("dropDocx"),
-      document.getElementById("inputDocx"),
-      document.getElementById("docxChip"),
-      ".docx",
-      (file) => {
-        if (!file.name.toLowerCase().endsWith(".docx")) { alert("请选择 .docx 文件"); return; }
-        docxFile = file;
-        showChip(document.getElementById("docxChip"), file, () => {
-          docxFile = null;
-          document.getElementById("docxChip").classList.add("hidden");
-          btnClean.disabled = true;
-        });
-        btnClean.disabled = false;
-      }
-    );
-
-    setupDropzone(
-      document.getElementById("dropPdf"),
-      document.getElementById("inputPdf"),
-      document.getElementById("pdfChip"),
-      ".pdf",
-      (file) => {
-        if (!file.name.toLowerCase().endsWith(".pdf")) { alert("请选择 .pdf 文件"); return; }
-        pdfFile = file;
-        showChip(document.getElementById("pdfChip"), file, () => {
-          pdfFile = null;
-          document.getElementById("pdfChip").classList.add("hidden");
-        });
-      }
-    );
+    setupDropzone(document.getElementById("dropDocx"), document.getElementById("inputDocx"), (file) => {
+      if (!file.name.toLowerCase().endsWith(".docx")) { alert("请选择 .docx"); return; }
+      docxFile = file;
+      showChip(document.getElementById("docxChip"), file, () => { docxFile = null; document.getElementById("docxChip").classList.add("hidden"); btnClean.disabled = true; });
+      btnClean.disabled = false;
+    });
+    setupDropzone(document.getElementById("dropPdf"), document.getElementById("inputPdf"), (file) => {
+      pdfFile = file;
+      showChip(document.getElementById("pdfChip"), file, () => { pdfFile = null; document.getElementById("pdfChip").classList.add("hidden"); });
+    });
 
     btnClean.addEventListener("click", async () => {
       if (!docxFile) return;
       btnClean.disabled = true;
-      btnClean.innerHTML = '<span class="spinner"></span> 正在整理…';
+      btnClean.innerHTML = '<span class="spinner"></span> 整理中…';
       document.getElementById("result").classList.add("hidden");
-
       try {
-        const arrayBuffer = await docxFile.arrayBuffer();
-        const { blob, paragraphs, stats } = await cleanDocx(arrayBuffer, {
+        const { blob, paragraphs, stats } = await cleanDocx(await docxFile.arrayBuffer(), {
           keepPageNumbers: document.getElementById("keepPageNumbers").checked,
         });
-
-        let pdfCheck = null;
+        let extra = "";
         if (pdfFile) {
-          const pdfBuf = await pdfFile.arrayBuffer();
           const pdfjs = await loadPdfJs();
-          pdfCheck = await compareWithPdf(pdfBuf, paragraphs, pdfjs);
+          const pdfCheck = await compareWithPdf(await pdfFile.arrayBuffer(), paragraphs, pdfjs);
+          let hint = "";
+          if (pdfCheck.status === "error" && pdfCheck.total_segments === 0) {
+            hint = `<p style="margin-top:8px"><strong>提示：</strong>你的 PDF 是纯图片扫描件，没有文字层。请切换到上方「📷 扫描件/图片 OCR」模式处理。</p>`;
+          }
+          extra = `<div class="check-banner ${pdfCheck.status}"><strong>PDF 对照：${pdfCheck.coverage_percent}%</strong>（${pdfCheck.matched_segments}/${pdfCheck.total_segments} 段）<br>${escapeHtml(pdfCheck.message)}${hint}</div>`;
         }
+        showWordResult(stats, extra, blob, docxFile.name.replace(/\.docx$/i, "") + "_已整理.docx");
+      } catch (err) { alert("整理失败：" + err.message); }
+      finally { btnClean.disabled = false; btnClean.textContent = "开始整理 Word"; }
+    });
 
-        if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-        downloadUrl = URL.createObjectURL(blob);
-        const outName = docxFile.name.replace(/\.docx$/i, "") + "_已整理.docx";
+    const btnOcr = document.getElementById("btnOcr");
+    setupDropzone(document.getElementById("dropScan"), document.getElementById("inputScan"), (file) => {
+      scanFile = file;
+      showChip(document.getElementById("scanChip"), file, () => { scanFile = null; document.getElementById("scanChip").classList.add("hidden"); btnOcr.disabled = true; });
+      btnOcr.disabled = false;
+    });
 
-        showResult(stats, pdfCheck, downloadUrl, outName);
+    btnOcr.addEventListener("click", async () => {
+      if (!scanFile) return;
+      btnOcr.disabled = true;
+      btnOcr.innerHTML = '<span class="spinner"></span> 处理中…';
+      document.getElementById("result").classList.add("hidden");
+      const statusEl = document.getElementById("ocrStatus");
+      try {
+        const pdfjs = await loadPdfJs();
+        const result = await ocrScanFile(scanFile, {
+          pdfjsLib: pdfjs,
+          denoise: document.getElementById("optDenoise").checked,
+          whiten: document.getElementById("optWhiten").checked,
+          removeBlue: document.getElementById("optBlue").checked,
+          removeRed: document.getElementById("optRed").checked,
+          removeGreen: document.getElementById("optGreen").checked,
+        }, (msg) => { statusEl.textContent = msg; });
+
+        const wordBlob = await buildDocx(result.paragraphs);
+        const pdfBlob = await canvasesToPdfBlob(result.cleanedPages);
+        const base = scanFile.name.replace(/\.[^.]+$/, "");
+
+        clearDownloads();
+        document.getElementById("result").classList.remove("hidden");
+        document.getElementById("statsGrid").innerHTML = `
+          <div class="stat-item"><div class="num">${result.pageCount}</div><div class="label">处理页数</div></div>
+          <div class="stat-item"><div class="num">${result.paragraphs.length}</div><div class="label">识别段落</div></div>
+          <div class="stat-item"><div class="num">${result.charCount}</div><div class="label">识别字数</div></div>`;
+        document.getElementById("extraArea").innerHTML = `<div class="check-banner ok">去污 + OCR 完成。可下载 Word 文字版，或下载去污后的 PDF 图片。</div>`;
+        document.getElementById("downloadArea").innerHTML = "";
+        addDownload(wordBlob, base + "_识别.docx", "⬇ 下载 Word 文字版");
+        addDownload(pdfBlob, base + "_去污.pdf", "⬇ 下载去污 PDF", "btn-secondary");
+        document.getElementById("result").scrollIntoView({ behavior: "smooth" });
       } catch (err) {
-        alert("整理失败：" + err.message);
+        alert("处理失败：" + err.message);
         console.error(err);
       } finally {
-        btnClean.disabled = false;
-        btnClean.textContent = "开始整理";
+        btnOcr.disabled = false;
+        btnOcr.textContent = "开始去污 + 识别文字";
+        statusEl.textContent = "";
       }
     });
 
-    function showResult(stats, pdfCheck, url, filename) {
-      const result = document.getElementById("result");
-      result.classList.remove("hidden");
+    function showWordResult(stats, extra, blob, filename) {
+      clearDownloads();
+      document.getElementById("result").classList.remove("hidden");
       document.getElementById("statsGrid").innerHTML = `
         <div class="stat-item"><div class="num">${stats.input_blocks}</div><div class="label">提取文本块</div></div>
         <div class="stat-item"><div class="num">${stats.output_paragraphs}</div><div class="label">输出段落</div></div>
         <div class="stat-item"><div class="num">${stats.unrotated_blocks}</div><div class="label">修正旋转</div></div>
-        <div class="stat-item"><div class="num">${stats.textbox_blocks}</div><div class="label">文本框</div></div>
-      `;
-
-      const checkArea = document.getElementById("pdfCheckArea");
-      if (pdfCheck) {
-        let missingHtml = "";
-        if (pdfCheck.missing_segments?.length) {
-          missingHtml = `<ul class="missing-list">${pdfCheck.missing_segments.map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>`;
-        }
-        checkArea.innerHTML = `
-          <div class="check-banner ${pdfCheck.status}">
-            <strong>PDF 对照：${pdfCheck.coverage_percent}% 段落匹配</strong>
-            （${pdfCheck.matched_segments}/${pdfCheck.total_segments} 段）<br>
-            ${escapeHtml(pdfCheck.message)}${missingHtml}
-          </div>`;
-      } else {
-        checkArea.innerHTML = `<p style="color:var(--muted);font-size:.9rem">未上传 PDF，跳过对照。可拖入 PDF 后重新整理。</p>`;
-      }
-
-      const dl = document.getElementById("btnDownload");
-      dl.href = url;
-      dl.download = filename;
-      result.scrollIntoView({ behavior: "smooth" });
+        <div class="stat-item"><div class="num">${stats.textbox_blocks}</div><div class="label">文本框</div></div>`;
+      document.getElementById("extraArea").innerHTML = extra;
+      document.getElementById("downloadArea").innerHTML = "";
+      addDownload(blob, filename, "⬇ 下载整理后的 Word");
+      document.getElementById("result").scrollIntoView({ behavior: "smooth" });
     }
 
     function escapeHtml(s) {

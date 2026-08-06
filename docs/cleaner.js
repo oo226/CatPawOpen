@@ -357,3 +357,4 @@ async function cleanDocx(arrayBuffer, options = {}) {
 }
 
 window.cleanDocx = cleanDocx;
+window.buildDocx = buildDocx;
