@@ -16,14 +16,13 @@
 
 **不用装 Python，不用下载任何东西**，浏览器打开就能用：
 
-### 👉 直接打开这个链接：
+### 👉 直接打开这个链接（推荐）：
 
-# https://cdn.jsdelivr.net/gh/oo226/CatPawOpen@master/docx-cleaner/web/index.html
+# https://raw.githack.com/oo226/CatPawOpen/master/docs/index.html
 
-（把上面链接复制到公司浏览器地址栏即可）
+把上面链接复制到公司浏览器地址栏，应该能看到正常的操作界面（不是一堆代码）。
 
-备用地址（需先在 GitHub 开启 Pages，见下方说明）：
-https://oo226.github.io/CatPawOpen/
+备用地址：https://oo226.github.io/CatPawOpen/（需先在 GitHub 开启 Pages，见下方）
 
 1. 把乱版 **.docx** 拖进网页
 2. 可选：拖入对照 **PDF** 检查有没有漏段
@@ -35,8 +34,9 @@ https://oo226.github.io/CatPawOpen/
 
 用手机打开 GitHub 仓库设置：
 1. 进入 https://github.com/oo226/CatPawOpen/settings/pages
-2. **Build and deployment → Source** 选 **GitHub Actions**
-3. 等 2 分钟，之后可用 https://oo226.github.io/CatPawOpen/
+2. **Build and deployment → Source** 选 **Deploy from a branch**
+3. Branch 选 **master**，文件夹选 **/docs**
+4. 点 Save，等 2 分钟后访问 https://oo226.github.io/CatPawOpen/
 
 ---
 

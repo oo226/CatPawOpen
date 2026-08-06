@@ -4,6 +4,7 @@ on:
   push:
     branches: [master, gh-pages]
     paths:
+      - "docs/**"
       - "docx-cleaner/web/**"
       - ".github/workflows/docx-cleaner-pages.yml"
   workflow_dispatch:
@@ -34,7 +35,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docx-cleaner/web
+          path: docs
 
       - name: Deploy to GitHub Pages
         id: deployment
