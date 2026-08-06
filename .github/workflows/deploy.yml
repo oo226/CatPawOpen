@@ -28,8 +28,9 @@ jobs:
 
       - name: Deploy to dist branch
         run: |
-          mkdir -p deploy/nodejs
+          mkdir -p deploy/nodejs deploy/docx-cleaner
           cp -r nodejs/dist deploy/nodejs/
+          cp -r docx-cleaner/web/* deploy/docx-cleaner/
           cd deploy
           git init
           git checkout -b dist

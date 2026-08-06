@@ -16,15 +16,27 @@
 
 **不用装 Python，不用下载任何东西**，浏览器打开就能用：
 
-### 👉 https://oo226.github.io/CatPawOpen/
+### 👉 直接打开这个链接：
 
-（若链接暂时打不开，等 1～2 分钟让网页部署完成，或刷新一下）
+# https://cdn.jsdelivr.net/gh/oo226/CatPawOpen@master/docx-cleaner/web/index.html
+
+（把上面链接复制到公司浏览器地址栏即可）
+
+备用地址（需先在 GitHub 开启 Pages，见下方说明）：
+https://oo226.github.io/CatPawOpen/
 
 1. 把乱版 **.docx** 拖进网页
 2. 可选：拖入对照 **PDF** 检查有没有漏段
 3. 点 **开始整理** → **下载** 整理后的文件
 
 所有处理都在**你自己的浏览器里**完成，文件不会上传到服务器。
+
+### 想用自己的域名？（一次性设置，30 秒）
+
+用手机打开 GitHub 仓库设置：
+1. 进入 https://github.com/oo226/CatPawOpen/settings/pages
+2. **Build and deployment → Source** 选 **GitHub Actions**
+3. 等 2 分钟，之后可用 https://oo226.github.io/CatPawOpen/
 
 ---
 
