@@ -12,16 +12,42 @@
 - 页码 `15` 飘在页面中间
 - 中文被 OCR 拆成 `选 举 业 主` 这种带空格的格式
 
-## 使用方法（推荐：EXE）
+## 网页测试版（公司电脑也能用，推荐先试这个）
 
-### 第一步：打包成 EXE（只需做一次）
+不用打包 EXE，有 Python 就能在浏览器里用，支持**拖拽上传**和 **PDF 对照检查**。
+
+### 启动方式
+
+**Windows：** 双击 `start_web.bat`
+
+**Mac / Linux：**
+```bash
+cd docx-cleaner
+chmod +x start_web.sh
+./start_web.sh
+```
+
+浏览器打开 **http://127.0.0.1:8765**，然后：
+
+1. 把乱版 **.docx** 拖进第一个框（必填）
+2. 把看着正常的 **PDF** 拖进第二个框（可选，用来检查有没有漏段）
+3. 点 **开始整理**
+4. 看对照结果，满意就点 **下载**
+
+数据只在你的本机处理，不会上传到网上。
+
+---
+
+## 桌面版（回家有编程电脑再用）
+
+### 打包成 EXE（只需做一次）
 
 1. 电脑上安装 [Python 3.10+](https://www.python.org/downloads/)（安装时勾选 **Add Python to PATH**）
 2. 把整个 `docx-cleaner` 文件夹拷到 Windows 电脑
 3. 双击运行 `build.bat`
 4. 等它跑完，在 `dist` 文件夹里会出现 **`Word文档一键整理.exe`**
 
-### 第二步：日常使用
+### 日常使用
 
 1. 双击 `Word文档一键整理.exe`
 2. 点 **选择 Word 文件**（或 **选择文件夹** 批量处理）
@@ -29,7 +55,7 @@
 4. 点 **开始整理**
 5. 会生成 `原文件名_已整理.docx`，**原文件不会被改**
 
-## 不想打包 EXE？直接跑 Python
+## 不想打包 EXE？直接跑 Python 桌面版
 
 ```bash
 cd docx-cleaner
@@ -62,10 +88,14 @@ python cli.py "D:\文档\乱版1.docx" "D:\文档\乱版2.docx" -o "D:\输出"
 
 | 文件 | 说明 |
 |------|------|
-| `gui.py` | 图形界面（打包成 EXE 用这个） |
+| `web_app.py` | **网页测试版**（拖拽上传 + PDF 对照） |
+| `start_web.bat` | Windows 一键启动网页版 |
+| `start_web.sh` | Mac/Linux 启动网页版 |
+| `pdf_checker.py` | PDF 对照检查逻辑 |
+| `gui.py` | 桌面图形界面（打包成 EXE 用这个） |
 | `cli.py` | 命令行版 |
 | `cleaner.py` | 核心整理逻辑 |
-| `build.bat` | Windows 一键打包脚本 |
+| `build.bat` | Windows 一键打包 EXE |
 | `requirements.txt` | Python 依赖 |
 
 ## 常见问题
