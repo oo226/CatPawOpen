@@ -12,7 +12,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  administration: write
 
 concurrency:
   group: docx-cleaner-pages
