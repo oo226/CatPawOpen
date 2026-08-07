@@ -1,3 +1,4 @@
 {
-    "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
+    "spider": "https://ghfast.top/https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5",
+    "_comment": "国内用 ghfast；直连可用 raw.githubusercontent.com/.../index.js.md5 或 github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5。备用: gh.llkk.cc / gh-proxy.com 同路径前缀。"
 }
