@@ -12,14 +12,14 @@
 - Python 3.10+
 - 建议网络可访问模型下载源（首次运行会下载模型）
 
-## 2. Windows 一键试
+## 2. Windows 在家电脑（推荐）
 
-```bat
-cd paddle-ocr-prototype
-run_windows.bat "D:\你的文件\1111.pdf"
-```
+**聊天记录看不到？** 直接打开同目录下的 **`在家怎么用.txt`**。
 
-输出在：`output-docx/`
+1. 双击 **`install_windows.bat`**（首次，只需一次）
+2. 扫描件 PDF 用：**`run_scanned.bat "你的文件.pdf"`**
+3. 其他 PDF 用：**`run_windows.bat "你的文件.pdf"`**
+4. 结果在 **`output-docx\`**
 
 ## 3. Linux/Mac
 
