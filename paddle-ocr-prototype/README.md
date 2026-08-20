@@ -63,3 +63,6 @@ OCR一定会有错字，重点检查：数字、日期、人名、条款编号�
 
 ### Q3: 转换报错
 看 `report.json` 里的 `reason` 字段，贴给我可以继续帮你调参数。
+
+### Q4: 安装后提示 paddleocr 命令参数不对
+本项目已适配 PaddleOCR 3.x，请重新运行 `install_windows.bat` 更新依赖。

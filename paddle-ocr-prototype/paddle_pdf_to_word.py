@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert PDF/images to editable DOCX via PaddleOCR PP-Structure.
+"""Convert PDF/images to editable DOCX via PaddleOCR or pdf2docx.
 
 Usage:
   python paddle_pdf_to_word.py "input.pdf" -o output_dir
@@ -10,11 +10,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import shutil
-import subprocess
+import os
 import sys
 from pathlib import Path
 
+# Avoid oneDNN issues on some CPU environments.
+os.environ.setdefault("FLAGS_use_mkldnn", "0")
+os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
 
 
 def is_image_pdf(pdf_path: Path, min_text_chars_per_page: int = 30) -> bool:
@@ -35,30 +37,6 @@ def is_image_pdf(pdf_path: Path, min_text_chars_per_page: int = 30) -> bool:
         doc.close()
 
 
-def build_paddleocr_cmd(input_path: Path, output_dir: Path, lang: str, scanned: bool) -> list[str]:
-    cmd = [
-        sys.executable,
-        "-m",
-        "paddleocr",
-        "--image_dir",
-        str(input_path),
-        "--type",
-        "structure",
-        "--recovery",
-        "true",
-        "--lang",
-        lang,
-        "--output",
-        str(output_dir),
-    ]
-
-    if not scanned and input_path.suffix.lower() == ".pdf":
-        # For standard PDF: faster and usually better style recovery
-        cmd.extend(["--use_pdf2docx_api", "true"])
-
-    return cmd
-
-
 def collect_inputs(input_path: Path, glob_pattern: str) -> list[Path]:
     if input_path.is_file():
         return [input_path]
@@ -67,6 +45,86 @@ def collect_inputs(input_path: Path, glob_pattern: str) -> list[Path]:
 
     files = sorted(input_path.glob(glob_pattern))
     return [p for p in files if p.is_file()]
+
+
+def convert_standard_pdf(file_path: Path, output_dir: Path) -> Path:
+    from pdf2docx import Converter
+
+    final_docx = output_dir / f"{file_path.stem}_ocr.docx"
+    converter = Converter(str(file_path))
+    try:
+        converter.convert(str(final_docx))
+    finally:
+        converter.close()
+    return final_docx
+
+
+def _box_top_left(box) -> tuple[float, float]:
+    if hasattr(box, "tolist"):
+        coords = box.tolist()
+    else:
+        coords = box
+
+    if coords is None or len(coords) == 0:
+        return 0.0, 0.0
+
+    # [x1, y1, x2, y2]
+    if len(coords) == 4 and all(isinstance(v, (int, float)) for v in coords):
+        return float(coords[1]), float(coords[0])
+
+    xs = [p[0] for p in coords]
+    ys = [p[1] for p in coords]
+    return float(min(ys)), float(min(xs))
+
+
+def _sorted_ocr_lines(page_result: dict) -> list[str]:
+    texts = page_result.get("rec_texts") or []
+    boxes = page_result.get("rec_polys") or page_result.get("rec_boxes") or []
+    if not texts:
+        return []
+
+    if len(boxes) != len(texts):
+        return [t for t in texts if t and str(t).strip()]
+
+    lines: list[tuple[float, float, str]] = []
+    for text, box in zip(texts, boxes, strict=False):
+        if not text or not str(text).strip():
+            continue
+        top, left = _box_top_left(box)
+        lines.append((top, left, str(text)))
+
+    lines.sort(key=lambda item: (item[0], item[1]))
+    return [line[2] for line in lines]
+
+
+def _build_docx_from_ocr_pages(pages: list[dict], output_path: Path) -> None:
+    from docx import Document
+
+    doc = Document()
+    for page_idx, page_result in enumerate(pages):
+        if page_idx > 0:
+            doc.add_page_break()
+        for line in _sorted_ocr_lines(page_result):
+            doc.add_paragraph(line)
+    doc.save(str(output_path))
+
+
+def convert_scanned(file_path: Path, output_dir: Path, lang: str) -> Path:
+    from paddleocr import PaddleOCR
+
+    ocr = PaddleOCR(
+        lang=lang,
+        enable_mkldnn=False,
+        use_doc_orientation_classify=False,
+        use_doc_unwarping=False,
+    )
+    pages = list(ocr.predict(str(file_path)))
+    if not pages:
+        raise RuntimeError("OCR 未返回任何页面结果")
+
+    final_docx = output_dir / f"{file_path.stem}_ocr.docx"
+    _build_docx_from_ocr_pages(pages, final_docx)
+    return final_docx
 
 
 def convert_one(file_path: Path, output_dir: Path, lang: str, force_mode: str) -> dict:
@@ -85,37 +143,25 @@ def convert_one(file_path: Path, output_dir: Path, lang: str, force_mode: str) -
     else:
         scanned = is_image_pdf(file_path) if ext == ".pdf" else True
 
-    job_output = output_dir / file_path.stem
-    job_output.mkdir(parents=True, exist_ok=True)
-
-    cmd = build_paddleocr_cmd(file_path, job_output, lang, scanned)
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-
-    if proc.returncode != 0:
+    try:
+        if scanned:
+            final_docx = convert_scanned(file_path, output_dir, lang)
+            mode = "scanned"
+        else:
+            final_docx = convert_standard_pdf(file_path, output_dir)
+            mode = "standard"
+    except Exception as exc:  # noqa: BLE001 - surface conversion errors in report.json
         return {
             "file": str(file_path),
             "status": "error",
             "mode": "scanned" if scanned else "standard",
-            "reason": proc.stderr[-2000:] if proc.stderr else proc.stdout[-2000:],
+            "reason": str(exc)[-2000:],
         }
-
-    docx_candidates = sorted(job_output.rglob("*.docx"))
-    if not docx_candidates:
-        return {
-            "file": str(file_path),
-            "status": "error",
-            "mode": "scanned" if scanned else "standard",
-            "reason": "转换完成但未发现 docx 输出",
-        }
-
-    best_docx = max(docx_candidates, key=lambda p: p.stat().st_size)
-    final_docx = output_dir / f"{file_path.stem}_ocr.docx"
-    shutil.copy2(best_docx, final_docx)
 
     return {
         "file": str(file_path),
         "status": "ok",
-        "mode": "scanned" if scanned else "standard",
+        "mode": mode,
         "docx": str(final_docx),
     }
 
