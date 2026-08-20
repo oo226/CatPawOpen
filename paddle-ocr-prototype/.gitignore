@@ -1,2 +1,4 @@
 __pycache__/
 venv/
+output-docx/
+test_sample.pdf
