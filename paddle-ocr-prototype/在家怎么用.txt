@@ -1,0 +1,68 @@
+========================================
+  扫描 PDF 转 Word — 在家电脑使用说明
+  （聊天记录看不到也能照着做）
+========================================
+
+【这个项目是干什么的】
+打印机扫出来的 PDF 其实是图片，Word 直接打开会乱版。
+这个工具用 PaddleOCR 识别文字并尽量恢复排版，输出 .docx。
+
+【第一步：拿到代码】
+打开 PowerShell 或 CMD，执行：
+
+  git clone https://github.com/oo226/CatPawOpen.git
+  cd CatPawOpen
+  git checkout cursor/paddleocr-prototype-8fe4
+  cd paddle-ocr-prototype
+
+（如果已经 clone 过，只需 cd 到 paddle-ocr-prototype 文件夹）
+
+【第二步：安装 Python（没有的话）】
+1. 打开 https://www.python.org/downloads/
+2. 下载 Python 3.10 或 3.11
+3. 安装时务必勾选：Add Python to PATH
+
+【第三步：首次安装依赖（只需一次）】
+双击运行：install_windows.bat
+或命令行：
+  install_windows.bat
+
+会创建虚拟环境 venv，并安装 PaddleOCR（首次较慢，要下载模型）。
+
+【第四步：转换你的 PDF】
+把扫描好的 PDF 拖到这个文件夹，或记住路径，然后：
+
+  run_windows.bat "你的文件.pdf"
+
+例如：
+  run_windows.bat "D:\下载\1111.pdf"
+
+扫描件建议强制扫描模式（往往更稳）：
+  run_scanned.bat "D:\下载\1111.pdf"
+
+【第五步：看结果】
+输出在文件夹：output-docx\
+- 1111_ocr.docx  ← 转换后的 Word
+- report.json    ← 成功/失败报告
+
+【和之前网页版的区别】
+- 网页版（oo226.github.io）：公司浏览器能用，但扫描 OCR 慢且效果一般
+- 这个 Paddle 版：在家电脑跑，效果通常更好，适合正式处理文件
+
+【常见问题】
+Q: pip 很慢？
+A: install_windows.bat 已尝试用国内镜像
+
+Q: 第一次特别慢？
+A: 正常，在下载 OCR 模型，后面会快一些
+
+Q: 还是有错字？
+A: OCR 都会有一些，重点人工核对：数字、日期、条款编号
+
+Q: 报错怎么办？
+A: 把 output-docx\report.json 内容发给我
+
+【相关链接】
+GitHub 仓库：https://github.com/oo226/CatPawOpen
+原型 PR：https://github.com/oo226/CatPawOpen/pull/5
+网页整理工具（乱版 docx）：https://oo226.github.io/CatPawOpen/
