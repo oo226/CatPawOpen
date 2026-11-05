@@ -81,3 +81,17 @@ jobs:
           git add .
           git commit -m "deploy: sync upstream $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dist
+
+      - name: Deploy to Gitee (CN)
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          GITEE_OWNER: ${{ secrets.GITEE_OWNER }}
+          GITEE_REPO: ${{ secrets.GITEE_REPO }}
+        run: |
+          if [ -z "${GITEE_TOKEN}" ] || [ -z "${GITEE_OWNER}" ]; then
+            echo "GITEE_TOKEN / GITEE_OWNER not set — skip Gitee CN mirror"
+            exit 0
+          fi
+          chmod +x scripts/deploy-gitee.sh
+          ./scripts/deploy-gitee.sh deploy

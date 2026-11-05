@@ -39,3 +39,17 @@ jobs:
           git add .
           git commit -m "deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" dist
+
+      # 国内源：同步同一份 dist 到 Gitee（需 Secrets: GITEE_TOKEN + GITEE_OWNER，可选 GITEE_REPO）
+      - name: Deploy to Gitee (CN)
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          GITEE_OWNER: ${{ secrets.GITEE_OWNER }}
+          GITEE_REPO: ${{ secrets.GITEE_REPO }}
+        run: |
+          if [ -z "${GITEE_TOKEN}" ] || [ -z "${GITEE_OWNER}" ]; then
+            echo "GITEE_TOKEN / GITEE_OWNER not set — skip Gitee CN mirror"
+            exit 0
+          fi
+          chmod +x scripts/deploy-gitee.sh
+          ./scripts/deploy-gitee.sh deploy

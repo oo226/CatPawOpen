@@ -1,3 +1,5 @@
 {
-    "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
+    "spider": "https://gitee.com/<你的Gitee用户名>/CatPawOpen/raw/dist/nodejs/dist/index.js.md5",
+    "_comment_cn": "国内请用 Gitee 直链（需先配置 GITEE_* Secrets 并 Deploy）。GitHub raw / ghfast 在国内经常不可用。",
+    "_comment_github": "能翻墙时可用 https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5 或 github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
 }
