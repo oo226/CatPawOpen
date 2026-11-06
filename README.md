@@ -19,19 +19,41 @@ npm start        # 生产运行（固定 3006 端口）
 3. 构建时会：
    - 编译 **index.config.js**（配置页、弹幕、网盘、直播等，对齐 [Darklessing/catvod douer](https://github.com/Darklessing/catvod/tree/main/douer) 结构）
    - 从仓库内 **vendor/douer** 复制 **index.js 完整运行时**（约 4MB，与 douer 同档，构建不访问外网）
-4. 在 MiraPlay 填入：
+4. 在 MiraPlay 填入（任选一种）：
+
+**国内推荐（加速镜像，朋友拉不动 raw 时用这个）：**
+
+```text
+https://ghfast.top/https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5
+```
+
+备用镜像（上面挂了再换）：
+
+```text
+https://gh.llkk.cc/https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5
+https://gh-proxy.com/https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5
+```
+
+**能直连 GitHub 时：**
+
+```text
+https://raw.githubusercontent.com/oo226/CatPawOpen/dist/nodejs/dist/index.js.md5
+```
+
+或 `github://` 协议：
 
 ```json
 {
-  "spider": "github://你的用户名/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
+  "spider": "github://oo226/CatPawOpen@dist/nodejs/dist/index.config.js.md5"
 }
 ```
 
-与 douer 一样，只需填 `spider` 一行，站点由源包自动生成。
+与 douer 一样，只需填源地址一行，站点由源包自动生成。`index.js.md5` / `index.config.js.md5` 按你用的客户端习惯选；MiraPlay 常见填 `index.js.md5`。
 
 完整配置示例见 [catvod-config.example.json](./catvod-config.example.json)。
 
-App 会从 GitHub 拉取构建产物，在设备内置 Node 运行时里执行，**不需要你的电脑开着**。
+App 会拉取构建产物，在设备内置 Node 运行时里执行，**不需要你的电脑开着**。
+注意：jsDelivr 对本仓库返回 403，不要用；仓库本身仍在 GitHub，国内靠上述代理前缀加速。
 
 ## 自建 API 服务器（可选）
 
